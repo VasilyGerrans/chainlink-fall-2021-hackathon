@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  width: 900px;
+  margin: auto;
 }
 
 .App-logo {
@@ -39,7 +41,7 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inconsolata',monospace, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -52,8 +54,6 @@ code {
 }
 
 .header {
-  width: 800px;
-  margin: auto;
   display: flex;
   justify-content: space-between;
   height: 50px;
@@ -62,4 +62,8 @@ code {
 .header > div {
   margin: 30px;
   align-content: center;
+}
+
+.MuiButton-label {
+  justify-content: left !important;
 }
