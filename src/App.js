@@ -7,13 +7,15 @@ import { useHistory } from 'react-router';
 import { ellipsisAddress, fixNFTURL } from './utilities';
 import NFT from './NFT';
 import './App.css';
-import { Button, Tooltip } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 function App() {
   const { Moralis } = useMoralis();
   const [ validNetwork, setValidNetwork ] = useState(false);
   const [ wallet, setWallet ] = useState("");
   const [ nfts, setNfts ] = useState([]);
+  const [ alignment, setAlignment ] = useState("eth");
 
   const history = useHistory();
 
@@ -103,8 +105,8 @@ function App() {
       {validNetwork === false ?
       <div className="header">
         <div></div>
-        <div>
-          Please connect to the Kovan network through MetaMask
+        <div style={{color: "red"}}>
+          Please connect to the <b>Kovan</b> network through MetaMask
         </div>
         <div></div>
       </div>
@@ -176,8 +178,11 @@ function App() {
           <div style={{textAlign: "left", width: "500px", margin: "50px auto", padding: "0px 20px", border: "1px solid black"}}>   
             {nfts.length > 0 ?
             <div>
-              <div>
+              <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                 <h2>select nft</h2>
+                <h2 style={{cursor: "pointer"}} onClick={() => {
+                  history.push("/");
+                }}>X</h2>
               </div>
               <div style={{
                 overflow: "scroll",
@@ -200,6 +205,22 @@ function App() {
               </div>
               <div>
                 <h2>currency</h2>
+              </div>
+              <div style={{margin: "20px auto"}}>
+                <ToggleButtonGroup
+                  color="primary"
+                  exclusive
+                  value={alignment}
+                  onChange={(event, newAlignment) => {
+                    setAlignment(newAlignment);
+                  }}
+                >
+                  <ToggleButton value="eth">ETH</ToggleButton>
+                  <ToggleButton value="usdc">USDC</ToggleButton>
+                  <ToggleButton value="dai">DAI</ToggleButton>
+                  <ToggleButton value="usdt">USDT</ToggleButton>   
+                </ToggleButtonGroup>
+                Something
               </div>
             </div>
             :
