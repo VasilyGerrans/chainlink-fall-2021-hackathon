@@ -27,10 +27,10 @@ function App() {
   }
 
   const getNFTs = async () => {
-    console.log("CALLEDF");
     const options = {chain: 'eth', address: '0x13edbf878e3dbb91d36d15f9b9e061f72d20b603'}
     const NFTs = await Moralis.Web3API.account.getNFTs(options);
 
+    // console.log(NFTs);
     const arr = [];
 
     for(var i = 0; i < NFTs.result?.length; i++) {
@@ -40,8 +40,6 @@ function App() {
     }
 
     setNfts(arr);
-    
-    console.log(NFTs);
   }
 
   useEffect(() => {
@@ -53,9 +51,9 @@ function App() {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log("NFTS", nfts);
-  }, [nfts]);
+  /* useEffect(() => {
+    console.log(nfts);
+  }, [nfts]); */
 
   const initWeb3 = async () => {
     const provider = await detectEthereumProvider();
@@ -67,7 +65,6 @@ function App() {
         if (Number(id) === networkId) {
           setValidNetwork(true);
         }
-        console.log(id);
       });
     }
 
@@ -139,6 +136,7 @@ function App() {
         nfts.map(n => {
           return (
             <NFT
+              key={nfts.indexOf(n)}
               name={n.name}
               descritpion={n.descritpion}
               src={fixNFTURL(n.image)}

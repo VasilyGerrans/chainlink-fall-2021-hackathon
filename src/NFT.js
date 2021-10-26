@@ -1,11 +1,6 @@
 import React from 'react';
-import { useEffect } from 'react/cjs/react.development';
 
 function NFT(props) {
-    useEffect(() => {
-        console.log(props.src);
-    }, []);
-
     return (
         <div>
             <h2>{props.name}</h2>
