@@ -3,7 +3,7 @@ import Web3 from 'web3';
 import { useEffect, useState } from 'react';
 import { useMoralis } from 'react-moralis';
 import { Switch, Route, useHistory } from 'react-router-dom';
-import { ToggleButton, ToggleButtonGroup, Slider, Box, Tooltip, Button, Input } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup, Slider, Box, Tooltip, Button, Input, createTheme } from '@mui/material';
 import { ellipsisAddress, fixNFTURL } from './utilities';
 import NFT from './NFT';
 import './App.css';
@@ -56,6 +56,14 @@ function App() {
     else {
       setNfts([]);
     }
+  }
+
+  const resetCreateAuction = () => {
+    setAlignment("eth");
+    setBiddingTime(timeOptions[0]);
+    setClosingPerc(80);
+    setAuctionTime("");
+    setStartingBid("");
   }
 
   useEffect(() => {
@@ -177,13 +185,16 @@ function App() {
           <div>
             <Button 
               variant="outlined" 
-              color="secondary" 
+              color="primary" 
               size="large" 
               style={{fontFamily: "Inconsolata,monospace"}}
               onClick={() => {
                 history.push("/create");
               }}
               disabled={false}
+              style={{
+                fontSize: "30px"
+              }}
             >
               create an auction
             </Button>
@@ -197,6 +208,7 @@ function App() {
                 <h2>select nft</h2>
                 <h2 style={{cursor: "pointer"}} onClick={() => {
                   history.push("/");
+                  resetCreateAuction();
                 }}>X</h2>
               </div>
               <div style={{
@@ -291,40 +303,7 @@ function App() {
                 </div>
                 <div>      
                 </div>
-              </div>
-              {/* <div className="convenience-container">
-                <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                  <div>
-                    <Input
-                      type="number"
-                      placeholder="closing time"
-                    />
-                  </div>
-                  <div>
-                    <ToggleButtonGroup
-                      exclusive
-                      value={closingTime}
-                      onChange={(event, newAlignment) => {
-                        if (newAlignment !== null) {
-                          setClosingTime(newAlignment);
-                        }
-                      }}
-                    >
-                      <ToggleButton size="medium" value={timeOptions[0]}>{timeOptions[0]}</ToggleButton>
-                      <ToggleButton size="medium" value={timeOptions[1]}>{timeOptions[1]}</ToggleButton>
-                      <ToggleButton size="medium" value={timeOptions[2]}>{timeOptions[2]}</ToggleButton>
-                    </ToggleButtonGroup>
-                  </div>
-                </div>
-                <div>
-                </div>
-              </div> */}
-              {/* <div style={{width: "470px", display: "grid", gridTemplateColumns: "50% 50%", margin: "auto"}}>
-                  <div style={{borderBottom: "5px solid blue"}}>
-                  </div>
-                  <div style={{borderBottom: "5px solid red"}}>
-                  </div>
-              </div> */}
+              </div>              
               {typeof closingPerc === "number" ?
                 <div className="convenience-container" style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                   <Tooltip title="Determines the percent of the auction during which it can (randomly) end." placement="left">
@@ -355,13 +334,13 @@ function App() {
               {auctionTime === "" || Number(auctionTime) === 0 ?
               <div></div>
               :
-              <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", color: "grey"}} >
+              <div className="convenience-container" style={{display: "flex", justifyContent: "space-between", alignItems: "center", color: "grey"}} >
                 <div>        
                   <div>
                     duration: 
                   </div>
                   <div>
-                    ≈{blocksFromTime()} (blocks)
+                    {blocksFromTime()} (blocks)
                   </div>
                 </div>
                 <div>
@@ -369,7 +348,7 @@ function App() {
                     bidding: 
                   </div>
                   <div>
-                    ≈{Math.round(blocksFromTime() * (closingPerc / 100))} (blocks)
+                    {Math.round(blocksFromTime() * (closingPerc / 100))} (blocks)
                   </div>
                 </div>
                 <div>
@@ -377,7 +356,7 @@ function App() {
                     closing: 
                   </div>
                   <div>
-                    ≈{Math.round(blocksFromTime() * (1 - closingPerc / 100))} (blocks)
+                    {Math.round(blocksFromTime() * (1 - closingPerc / 100))} (blocks)
                   </div>
                 </div>
               </div>
