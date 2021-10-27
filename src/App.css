@@ -68,7 +68,7 @@ code {
   justify-content: left !important;
 }
 
-.MuiButtonBase-root, input {
+.MuiButtonBase-root, input, div {
   font-family: 'Inconsolata',monospace, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif !important;
@@ -76,4 +76,8 @@ code {
 
 .convenience-container {
   margin: 15px;
+}
+
+.MuiSlider-rail {
+  background-color: red !important;
 }

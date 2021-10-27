@@ -3,11 +3,10 @@ import Web3 from 'web3';
 import { useEffect, useState } from 'react';
 import { useMoralis } from 'react-moralis';
 import { Switch, Route, useHistory } from 'react-router-dom';
+import { ToggleButton, ToggleButtonGroup, Slider, Box, Tooltip, Button, Input } from '@mui/material';
 import { ellipsisAddress, fixNFTURL } from './utilities';
 import NFT from './NFT';
 import './App.css';
-import { Button, Input } from '@material-ui/core';
-import { ToggleButton, ToggleButtonGroup, TextField } from '@mui/material';
 
 function App() {
   const timeOptions = ["hours", "days", "weeks"];
@@ -18,7 +17,9 @@ function App() {
   const [ nfts, setNfts ] = useState([]);
   const [ alignment, setAlignment ] = useState("eth");
   const [ biddingTime, setBiddingTime ] = useState(timeOptions[0]); 
-  const [ closingTime, setClosingTime ] = useState(timeOptions[0]);
+  const [ closingPerc, setClosingPerc ] = useState(80);
+  const [ auctionTime, setAuctionTime ] = useState("");
+  const [ startingBid, setStartingBid ] = useState("");
 
   const history = useHistory();
 
@@ -70,6 +71,12 @@ function App() {
   /* useEffect(() => {
     console.log(nfts);
   }, [nfts]); */
+
+  const blocksFromTime = () => {
+    console.log(closingPerc, closingPerc/100)
+    let timeMultiplier = (biddingTime === timeOptions[0] ? 1 : biddingTime === timeOptions[1] ? 24 : 24 * 7);
+    return Math.ceil(Number(auctionTime) * 60 * 60 * timeMultiplier / 13);
+  }
 
   const initWeb3 = async () => {
     const provider = await detectEthereumProvider();
@@ -215,10 +222,21 @@ function App() {
               <div className="convenience-container">
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                   <div>
-                    <Input
-                      type="number"
-                      placeholder="starting bid"
-                    />
+                    <Tooltip title="Determines the starting amount bidders will have to bid." placement="left">
+                      <Input
+                        type="number"
+                        placeholder="starting bid"
+                        value={startingBid} 
+                        onChange={event => {
+                          if (event.target.value > 0) {
+                            setStartingBid(event.target.value);
+                          }
+                          else if (event.target.value === "0" || event.target.value === "") {
+                            setStartingBid("");
+                          }
+                        }}
+                      />
+                    </Tooltip>
                   </div>
                   <div>
                     <ToggleButtonGroup
@@ -239,10 +257,21 @@ function App() {
               <div className="convenience-container">
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                   <div>
-                    <Input
-                      type="number"
-                      placeholder="bidding time"
-                    />
+                    <Tooltip title="Determines how long the auction will last." placement="left">
+                      <Input
+                        type="number"
+                        placeholder="auction time"
+                        value={auctionTime}                      
+                        onChange={event => {
+                          if (event.target.value > 0) {
+                            setAuctionTime(event.target.value);
+                          }
+                          else if (event.target.value === "0" || event.target.value === "") {
+                            setAuctionTime("");
+                          }
+                        }}
+                      />
+                    </Tooltip>
                   </div>
                   <div>
                     <ToggleButtonGroup
@@ -260,10 +289,10 @@ function App() {
                     </ToggleButtonGroup>
                   </div>                  
                 </div>
-                <div>
+                <div>      
                 </div>
               </div>
-              <div className="convenience-container">
+              {/* <div className="convenience-container">
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                   <div>
                     <Input
@@ -289,40 +318,79 @@ function App() {
                 </div>
                 <div>
                 </div>
-              </div>
-              {/* 
-              <div>
-              </div>
-              <div style={{margin: "20px auto"}}>
-              </div>
-              <div style={{display: "flex", justifyContent: "space-around", margin: "30px"}}>
-                <div>
-                  <div style={{display: "flex", justifyContent: "space-around", margin: "10px"}}>
-                    <Input 
-                      type="number" 
-                    />
-                  </div>
-                </div>
-                <div>
-                  <div>
-                    closing time
-                  </div>
-                  <div style={{display: "flex", justifyContent: "space-around", margin: "10px"}}>
-                    <Input 
-                      type="number" 
-                    />
-                    <Dropdown text={biddingTime}>
-                      <Dropdown.Menu>
-                        <Dropdown.Item text={timeOptions[0]} onClick={() => {setBiddingTime(timeOptions[0])}} />
-                        <Dropdown.Item text={timeOptions[1]} onClick={() => {setBiddingTime(timeOptions[1])}} />
-                        <Dropdown.Item text={timeOptions[2]} onClick={() => {setBiddingTime(timeOptions[2])}} />
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </div>
-                  <div>
-                  </div>
-                </div>
               </div> */}
+              {/* <div style={{width: "470px", display: "grid", gridTemplateColumns: "50% 50%", margin: "auto"}}>
+                  <div style={{borderBottom: "5px solid blue"}}>
+                  </div>
+                  <div style={{borderBottom: "5px solid red"}}>
+                  </div>
+              </div> */}
+              {typeof closingPerc === "number" ?
+                <div className="convenience-container" style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                  <Tooltip title="Determines the percent of the auction during which it can (randomly) end." placement="left">
+                    <div>
+                        closing time
+                    </div>
+                  </Tooltip>
+                  <Box sx={{width: 200}}>
+                    <Slider
+                      value={closingPerc}
+                      onChange={(event, newValue) => {
+                        setClosingPerc(Math.max(20, Math.min(80, newValue)));
+                      }}
+                      track="inverted"
+                      min={0}
+                      step={1}
+                      max={100}
+                      valueLabelDisplay="auto"
+                      valueLabelFormat={value => {
+                        return `${100-value}%`;
+                      }}
+                    />
+                  </Box>
+                </div>
+                :
+                <span></span>
+              }
+              {auctionTime === "" || Number(auctionTime) === 0 ?
+              <div></div>
+              :
+              <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", color: "grey"}} >
+                <div>        
+                  <div>
+                    duration: 
+                  </div>
+                  <div>
+                    ≈{blocksFromTime()} (blocks)
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    bidding: 
+                  </div>
+                  <div>
+                    ≈{Math.round(blocksFromTime() * (closingPerc / 100))} (blocks)
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    closing: 
+                  </div>
+                  <div>
+                    ≈{Math.round(blocksFromTime() * (1 - closingPerc / 100))} (blocks)
+                  </div>
+                </div>
+              </div>
+              }
+              <div style={{margin: "20px", textAlign: "center"}}>
+                <Button 
+                  size="large" 
+                  disabled={!(startingBid !== "" && Number(startingBid) > 0 &&
+                  auctionTime !== "" && Number(auctionTime) > 0)}
+                  style={{fontWeight: "bold", fontSize: "30px"}}>
+                  create auction
+                </Button>
+              </div>
             </div>
             :
             <div style={{textAlign: "center"}}>
