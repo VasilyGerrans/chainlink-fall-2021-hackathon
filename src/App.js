@@ -214,10 +214,8 @@ function App() {
                     setAlignment(newAlignment);
                   }}
                 >
-                  <ToggleButton value="eth">ETH</ToggleButton>
-                  <ToggleButton value="usdc">USDC</ToggleButton>
-                  <ToggleButton value="dai">DAI</ToggleButton>
-                  <ToggleButton value="usdt">USDT</ToggleButton>   
+                  <ToggleButton size="large" value="eth">WETH</ToggleButton>
+                  <ToggleButton size="large" value="usdc">USDC</ToggleButton>
                 </ToggleButtonGroup>
                 
               </div>
