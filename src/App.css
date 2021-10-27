@@ -73,3 +73,7 @@ code {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif !important;
 }
+
+.convenience-container {
+  margin: 15px;
+}

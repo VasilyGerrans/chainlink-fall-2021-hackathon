@@ -6,15 +6,19 @@ import { Switch, Route, useHistory } from 'react-router-dom';
 import { ellipsisAddress, fixNFTURL } from './utilities';
 import NFT from './NFT';
 import './App.css';
-import { Button } from '@material-ui/core';
-import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Button, Input } from '@material-ui/core';
+import { ToggleButton, ToggleButtonGroup, TextField } from '@mui/material';
 
 function App() {
+  const timeOptions = ["hours", "days", "weeks"];
+
   const { Moralis } = useMoralis();
   const [ validNetwork, setValidNetwork ] = useState(false);
   const [ wallet, setWallet ] = useState("");
   const [ nfts, setNfts ] = useState([]);
   const [ alignment, setAlignment ] = useState("eth");
+  const [ biddingTime, setBiddingTime ] = useState(timeOptions[0]); 
+  const [ closingTime, setClosingTime ] = useState(timeOptions[0]);
 
   const history = useHistory();
 
@@ -36,7 +40,6 @@ function App() {
     const options = {chain: 'eth', address: '0x13edbf878e3dbb91d36d15f9b9e061f72d20b603'}
     const NFTs = await Moralis.Web3API.account.getNFTs(options);
 
-    console.log(NFTs);
     const arr = [];
 
     for(var i = 0; i < NFTs.result?.length; i++) {
@@ -45,7 +48,13 @@ function App() {
       arr.push(json);
     }
 
-    setNfts(arr);
+    if (arr.length > 0) {
+      console.log("arr", arr);
+      setNfts(arr);
+    }
+    else {
+      setNfts([]);
+    }
   }
 
   useEffect(() => {
@@ -202,31 +211,118 @@ function App() {
                 <span></span>
                 }
               </div>
+              <br/>
+              <div className="convenience-container">
+                <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                  <div>
+                    <Input
+                      type="number"
+                      placeholder="starting bid"
+                    />
+                  </div>
+                  <div>
+                    <ToggleButtonGroup
+                      exclusive
+                      value={alignment}
+                      onChange={(event, newAlignment) => {
+                        if (newAlignment !== null) {
+                          setAlignment(newAlignment);
+                        }
+                      }}
+                    >
+                      <ToggleButton size="medium" value="eth">WETH</ToggleButton>
+                      <ToggleButton size="medium" value="usdc">USDC</ToggleButton>
+                    </ToggleButtonGroup>
+                  </div>
+                </div>
+              </div>
+              <div className="convenience-container">
+                <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                  <div>
+                    <Input
+                      type="number"
+                      placeholder="bidding time"
+                    />
+                  </div>
+                  <div>
+                    <ToggleButtonGroup
+                      exclusive
+                      value={biddingTime}
+                      onChange={(event, newAlignment) => {
+                        if (newAlignment !== null) {
+                          setBiddingTime(newAlignment);
+                        }
+                      }}
+                    >
+                      <ToggleButton size="medium" value={timeOptions[0]}>{timeOptions[0]}</ToggleButton>
+                      <ToggleButton size="medium" value={timeOptions[1]}>{timeOptions[1]}</ToggleButton>
+                      <ToggleButton size="medium" value={timeOptions[2]}>{timeOptions[2]}</ToggleButton>
+                    </ToggleButtonGroup>
+                  </div>                  
+                </div>
+                <div>
+                </div>
+              </div>
+              <div className="convenience-container">
+                <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                  <div>
+                    <Input
+                      type="number"
+                      placeholder="closing time"
+                    />
+                  </div>
+                  <div>
+                    <ToggleButtonGroup
+                      exclusive
+                      value={closingTime}
+                      onChange={(event, newAlignment) => {
+                        if (newAlignment !== null) {
+                          setClosingTime(newAlignment);
+                        }
+                      }}
+                    >
+                      <ToggleButton size="medium" value={timeOptions[0]}>{timeOptions[0]}</ToggleButton>
+                      <ToggleButton size="medium" value={timeOptions[1]}>{timeOptions[1]}</ToggleButton>
+                      <ToggleButton size="medium" value={timeOptions[2]}>{timeOptions[2]}</ToggleButton>
+                    </ToggleButtonGroup>
+                  </div>
+                </div>
+                <div>
+                </div>
+              </div>
+              {/* 
               <div>
-                <h2>currency</h2>
               </div>
               <div style={{margin: "20px auto"}}>
-                <ToggleButtonGroup
-                  color="primary"
-                  exclusive
-                  value={alignment}
-                  onChange={(event, newAlignment) => {
-                    setAlignment(newAlignment);
-                  }}
-                >
-                  <ToggleButton size="large" value="eth">WETH</ToggleButton>
-                  <ToggleButton size="large" value="usdc">USDC</ToggleButton>
-                </ToggleButtonGroup>
-                
               </div>
-              <div style={{display: "flex", justifyContent: "space-around"}}>
+              <div style={{display: "flex", justifyContent: "space-around", margin: "30px"}}>
                 <div>
-                  auction length
+                  <div style={{display: "flex", justifyContent: "space-around", margin: "10px"}}>
+                    <Input 
+                      type="number" 
+                    />
+                  </div>
                 </div>
                 <div>
-                  closing window length
+                  <div>
+                    closing time
+                  </div>
+                  <div style={{display: "flex", justifyContent: "space-around", margin: "10px"}}>
+                    <Input 
+                      type="number" 
+                    />
+                    <Dropdown text={biddingTime}>
+                      <Dropdown.Menu>
+                        <Dropdown.Item text={timeOptions[0]} onClick={() => {setBiddingTime(timeOptions[0])}} />
+                        <Dropdown.Item text={timeOptions[1]} onClick={() => {setBiddingTime(timeOptions[1])}} />
+                        <Dropdown.Item text={timeOptions[2]} onClick={() => {setBiddingTime(timeOptions[2])}} />
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
+                  <div>
+                  </div>
                 </div>
-              </div>
+              </div> */}
             </div>
             :
             <div style={{textAlign: "center"}}>
