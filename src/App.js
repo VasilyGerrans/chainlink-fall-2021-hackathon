@@ -2,8 +2,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
 import { useEffect, useState } from 'react';
 import { useMoralis } from 'react-moralis';
-import { Switch, Route } from 'react-router-dom';
-import { useHistory } from 'react-router';
+import { Switch, Route, useHistory } from 'react-router-dom';
 import { ellipsisAddress, fixNFTURL } from './utilities';
 import NFT from './NFT';
 import './App.css';
@@ -220,7 +219,15 @@ function App() {
                   <ToggleButton value="dai">DAI</ToggleButton>
                   <ToggleButton value="usdt">USDT</ToggleButton>   
                 </ToggleButtonGroup>
-                Something
+                
+              </div>
+              <div style={{display: "flex", justifyContent: "space-around"}}>
+                <div>
+                  auction length
+                </div>
+                <div>
+                  closing window length
+                </div>
               </div>
             </div>
             :
