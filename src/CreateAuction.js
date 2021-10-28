@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ToggleButtonGroup, ToggleButton, Button, Tooltip, Input, Box, Slider } from '@mui/material';
+import { ToggleButtonGroup, ToggleButton, Button, Tooltip, Input, Box, Slider, TextField } from '@mui/material';
 import { fixNFTURL } from './utilities';
 import NFT from './NFT';
 
@@ -10,14 +10,17 @@ function CreateAuction(props) {
         }
     }, [props.nfts]);
 
-    const timeOptions = ["hours", "days", "weeks"];
-
+    
+    const timeOptions = Object.freeze(["hours", "days", "weeks"]);
+    const displayOptions = Object.freeze(["highlight", "search", "selected"]);
+    
     const [ alignment, setAlignment ] = useState("eth");
     const [ biddingTime, setBiddingTime ] = useState(timeOptions[0]); 
     const [ closingPerc, setClosingPerc ] = useState(80);
     const [ auctionTime, setAuctionTime ] = useState("");
     const [ startingBid, setStartingBid ] = useState("");
     const [ selectedNft, setSelectedNft ] = useState({});
+    const [ display, setDisplay ] = useState(displayOptions[1]);
 
     const resetCreateAuction = () => {
         setAlignment("eth");
@@ -43,50 +46,88 @@ function CreateAuction(props) {
                 resetCreateAuction();
             }}>X</h2>
             </div>
-            {props.nfts.length > 0 ?
-            <div style={{
-            overflow: "scroll",
-            height: "400px"
-            }}>
-            <ToggleButtonGroup
-                orientation="vertical"
-                exclusive
-                value={selectedNft}
-                style={{width: "100%"}}
-                onChange={(event, newValue) => {
-                    if (newValue !== null) {
-                        console.log(newValue);
-                        let nft = props.nfts?.find(n => n.id === newValue);
-                        if (typeof nft === "object") {
-                            setSelectedNft(nft);
-                        }
-                        else {
-                            setSelectedNft("");
-                        }
-                    }
-                }}
-            >
-                {props.nfts.map(n => {
-                    return (
-                    <ToggleButton key={n.id} value={n.id} aria-label="list">
-                        <NFT
-                            name={n.name}
-                            descritpion={n.descritpion}
-                            src={fixNFTURL(n.image)}
-                        />
-                    </ToggleButton>
-                    )
-                })}
-            </ToggleButtonGroup>
-            {props.nftQty > 5 ?
-            <div style={{justifyContent: "left"}}>
-                <Button style={{width: "500px"}}>                      
-                    <h4 style={{margin: "auto"}}>Search {props.nftQty - props.nfts.length} more props.nfts...</h4>
-                </Button>
+            {display === displayOptions[1] ?
+            <div style={{textAlign: "center", height: "400px", display: "flex", alignItems: "center"}}>
+                <div>
+                    <Input 
+                        placeholder="enter your NFT address here..." 
+                        label="enter your NFT address" 
+                        style={{
+                            width: "470px"
+                        }}
+                    />
+                    <Button 
+                        color="secondary"
+                        onClick={() => {
+                            if (props.nfts.length > 0) {
+                                setSelectedNft(props.nfts[0]);
+                            }
+                            setDisplay(displayOptions[0]);
+                        }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button>
+                        Search
+                    </Button>
+                </div>
             </div>
             :
-            <span></span>
-            }
+            display === displayOptions[2] ?
+            <div>
+                SELECTED
+            </div>
+            :
+            props.nfts.length > 0 ?
+            <div style={{
+                overflow: "scroll",
+                height: "400px"
+            }}>
+                <ToggleButtonGroup
+                    orientation="vertical"
+                    exclusive
+                    value={selectedNft}
+                    style={{width: "100%"}}
+                    onChange={(event, newValue) => {
+                        if (newValue !== null) {
+                            console.log(newValue);
+                            let nft = props.nfts?.find(n => n.id === newValue);
+                            if (typeof nft === "object") {
+                                setSelectedNft(nft);
+                            }
+                            else {
+                                setSelectedNft("");
+                            }
+                        }
+                    }}
+                >
+                    {props.nfts.map(n => {
+                        return (
+                        <ToggleButton key={n.id} value={n.id} aria-label="list">
+                            <NFT
+                                name={n.name}
+                                descritpion={n.descritpion}
+                                src={fixNFTURL(n.image)}
+                            />
+                        </ToggleButton>
+                        )
+                    })}
+                </ToggleButtonGroup>
+                {props.nftQty > 5 ?
+                <div style={{justifyContent: "left"}}>
+                    <Button 
+                        style={{width: "500px"}}
+                        onClick={() => {
+                            setSelectedNft({});
+                            setDisplay(displayOptions[1]);
+                        }}    
+                    >                      
+                        <h4 style={{margin: "auto"}}>Search {props.nftQty - props.nfts.length} more nfts...</h4>
+                    </Button>
+                </div>
+                :
+                <span></span>
+                }
             </div>
             :
             <div></div>
@@ -111,17 +152,17 @@ function CreateAuction(props) {
                 <div>
                 <Tooltip title="Determines the starting amount bidders will have to bid." placement="left">
                     <Input
-                    type="number"
-                    placeholder="starting bid"
-                    value={startingBid} 
-                    onChange={event => {
-                        if (event.target.value > 0) {
-                        setStartingBid(event.target.value);
-                        }
-                        else if (event.target.value === "0" || event.target.value === "") {
-                        setStartingBid("");
-                        }
-                    }}
+                        type="number"
+                        placeholder="starting bid"
+                        value={startingBid} 
+                        onChange={event => {
+                            if (event.target.value > 0) {
+                                setStartingBid(event.target.value);
+                            }
+                            else if (event.target.value === "0" || event.target.value === "") {
+                                setStartingBid("");
+                            }
+                        }}
                     />
                 </Tooltip>
                 </div>
