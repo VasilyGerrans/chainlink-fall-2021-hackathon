@@ -6,8 +6,7 @@ import NFT from './NFT';
 function CreateAuction(props) {
     useEffect(() => {
         if (props.nfts.length > 0) {
-            setSelectedNft(props.nfts[0].id);
-            setSelectedName(props.nfts[0].name);
+            setSelectedNft(props.nfts[0]);
         }
     }, [props.nfts]);
 
@@ -18,8 +17,7 @@ function CreateAuction(props) {
     const [ closingPerc, setClosingPerc ] = useState(80);
     const [ auctionTime, setAuctionTime ] = useState("");
     const [ startingBid, setStartingBid ] = useState("");
-    const [ selectedNft, setSelectedNft ] = useState("");
-    const [ selectedName, setSelectedName ] = useState("");    
+    const [ selectedNft, setSelectedNft ] = useState({});
 
     const resetCreateAuction = () => {
         setAlignment("eth");
@@ -54,24 +52,31 @@ function CreateAuction(props) {
                 orientation="vertical"
                 exclusive
                 value={selectedNft}
+                style={{width: "100%"}}
                 onChange={(event, newValue) => {
                     if (newValue !== null) {
-                        setSelectedNft(newValue);
-                        setSelectedName() // set name
+                        console.log(newValue);
+                        let nft = props.nfts?.find(n => n.id === newValue);
+                        if (typeof nft === "object") {
+                            setSelectedNft(nft);
+                        }
+                        else {
+                            setSelectedNft("");
+                        }
                     }
                 }}
             >
-            {props.nfts.map(n => {
-                return (
-                <ToggleButton key={n.id} value={n.id} aria-label="list">
-                    <NFT
-                        name={n.name}
-                        descritpion={n.descritpion}
-                        src={fixNFTURL(n.image)}
-                    />
-                </ToggleButton>
-                )
-            })}
+                {props.nfts.map(n => {
+                    return (
+                    <ToggleButton key={n.id} value={n.id} aria-label="list">
+                        <NFT
+                            name={n.name}
+                            descritpion={n.descritpion}
+                            src={fixNFTURL(n.image)}
+                        />
+                    </ToggleButton>
+                    )
+                })}
             </ToggleButtonGroup>
             {props.nftQty > 5 ?
             <div style={{justifyContent: "left"}}>
@@ -87,11 +92,18 @@ function CreateAuction(props) {
             <div></div>
             }
             <br/>
-            {selectedName === "" ?
+            {selectedNft === {} ?
             <span></span>
             :
-            <div className="convenience-container">
-            {selectedName}
+            <div>
+                <div className="convenience-container">
+                    <h2>
+                        {selectedNft.name}
+                    </h2>
+                </div>
+                <div className="convenience-container">
+                    {selectedNft.description}
+                </div>
             </div>
             }
             <div className="convenience-container">
