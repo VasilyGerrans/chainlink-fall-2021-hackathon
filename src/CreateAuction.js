@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ToggleButtonGroup, ToggleButton, Button, Tooltip, Input, Box, Slider, TextField } from '@mui/material';
 import { fixNFTURL } from './utilities';
+import Web3 from 'web3';
 import NFT from './NFT';
 
 function CreateAuction(props) {
@@ -10,7 +11,6 @@ function CreateAuction(props) {
         }
     }, [props.nfts]);
 
-    
     const timeOptions = Object.freeze(["hours", "days", "weeks"]);
     const displayOptions = Object.freeze(["highlight", "search", "selected"]);
     
@@ -19,8 +19,10 @@ function CreateAuction(props) {
     const [ closingPerc, setClosingPerc ] = useState(80);
     const [ auctionTime, setAuctionTime ] = useState("");
     const [ startingBid, setStartingBid ] = useState("");
+    const [ search, setSearch ] = useState("");
+    const [ tokenId, setTokenId ] = useState("");
     const [ selectedNft, setSelectedNft ] = useState({});
-    const [ display, setDisplay ] = useState(displayOptions[1]);
+    const [ display, setDisplay ] = useState(displayOptions[0]);
 
     const resetCreateAuction = () => {
         setAlignment("eth");
@@ -50,10 +52,26 @@ function CreateAuction(props) {
             <div style={{textAlign: "center", height: "400px", display: "flex", alignItems: "center"}}>
                 <div>
                     <Input 
-                        placeholder="enter your NFT address here..." 
-                        label="enter your NFT address" 
+                        placeholder="enter your NFT contract address here" 
                         style={{
-                            width: "470px"
+                            width: "470px",
+                            marginBottom: "30px"
+                        }}
+                        value={search}
+                        onChange={(event) => {
+                            setSearch(event.target.value);
+                        }}
+                    />
+                    <br/>
+                    <Input 
+                        placeholder="enter your token id here" 
+                        style={{
+                            width: "470px",
+                            marginBottom: "30px"
+                        }}
+                        value={tokenId}
+                        onChange={(event) => {
+                            setTokenId(event.target.value);
                         }}
                     />
                     <Button 
@@ -67,7 +85,23 @@ function CreateAuction(props) {
                     >
                         Cancel
                     </Button>
-                    <Button>
+                    <Button
+                        onClick={async () => {
+                            console.log(search);
+                            if (Web3.utils.isAddress(search)) {
+                                try {
+                                    const options = {chain: "eth", address: search, token_id: tokenId}
+                                    const meta = await props.Moralis.Web3API.token.getTokenIdMetadata(options);
+                                    console.log(meta);
+                                    const result = await props.pushNftResult(meta);
+                                    setSelectedNft(result);
+                                    setDisplay(displayOptions[0]); // need to find a way to fix the CORS
+                                } catch(err) {
+
+                                }
+                            }
+                        }}
+                    >
                         Search
                     </Button>
                 </div>
@@ -113,7 +147,7 @@ function CreateAuction(props) {
                         )
                     })}
                 </ToggleButtonGroup>
-                {props.nftQty > 5 ?
+                {props.nftQty > 10 ?
                 <div style={{justifyContent: "left"}}>
                     <Button 
                         style={{width: "500px"}}
@@ -206,9 +240,9 @@ function CreateAuction(props) {
                     exclusive
                     value={biddingTime}
                     onChange={(event, newAlignment) => {
-                    if (newAlignment !== null) {
-                        setBiddingTime(newAlignment);
-                    }
+                        if (newAlignment !== null) {
+                            setBiddingTime(newAlignment);
+                        }
                     }}
                 >
                     <ToggleButton size="medium" value={timeOptions[0]}>{timeOptions[0]}</ToggleButton>

@@ -5,6 +5,7 @@ import { useMoralis } from 'react-moralis';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import { ellipsisAddress, fixNFTURL } from './utilities';
 import CreateAuction from './CreateAuction';
+import { Button } from '@mui/material';
 import Home from './Home';
 import './App.css';
 
@@ -14,6 +15,7 @@ function App() {
   const [ nftQty, setNftQty ] = useState(0);
   const [ validNetwork, setValidNetwork ] = useState(false);
   const [ wallet, setWallet ] = useState("");
+  const [ returnedNFTs, setReturnedNFTs ] = useState({});
 
   const history = useHistory();
 
@@ -23,6 +25,7 @@ function App() {
     if (accounts.length > 0) {
       setWallet(accounts[0]);
       (async () => {
+        console.log("ACCS");
         getNFTs();
       })();
     }
@@ -32,17 +35,20 @@ function App() {
   }
 
   const getNFTs = async () => {
+    console.log("LAUNCHED NFT SEARCH");
     const options = {chain: 'eth', address: '0x139a0975ea36cec4c59447002a875749ac9c460f'}
     const NFTs = await Moralis.Web3API.account.getNFTs(options);
 
     console.log(NFTs);
+
+    setReturnedNFTs(NFTs);
 
     const arr = [];
 
     setNftQty(NFTs.total);
 
     var increment = 0;
-    for(var i = 0; i < Math.min(NFTs.result?.length, 5 + increment); i++) {
+    for(var i = 0; i < Math.min(NFTs.result?.length, 10 + increment); i++) {
       try {
         let response = await fetch(NFTs.result[i].token_uri);
         let json = await response.json();
@@ -66,11 +72,21 @@ function App() {
     (async () => {
       await initWeb3();
       await connect();
-      await getNFTs();
 
       window.ethereum?.on('accountsChanged', handleAccountsChanged);
     })();
   }, []);
+
+  const pushNftResult = async newResult => {
+    let response = await fetch(newResult.token_uri);
+    let json = await response.json();
+    let src = await fetch(fixNFTURL(json.image));
+    let arr = nfts;
+    arr.unshift(src);
+    arr.pop();
+    setNfts(src);
+    return src;
+  }
 
   const initWeb3 = async () => {
     const provider = await detectEthereumProvider();
@@ -139,9 +155,9 @@ function App() {
         <div>          
         </div>
         <div>
-          <button onClick={requestConnect}>
+          <Button onClick={requestConnect}>
             Connect Wallet
-          </button>
+          </Button>
         </div>
       </div>
       }
@@ -161,6 +177,8 @@ function App() {
             nfts={nfts}
             nftQty={nftQty}
             history={history}
+            Moralis={Moralis}
+            pushNftResult={pushNftResult}
           />          
         </Route>
       </Switch>
