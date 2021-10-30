@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { ToggleButtonGroup, ToggleButton, Button, Tooltip, Input, Box, Slider, TextField } from '@mui/material';
+import { ToggleButtonGroup, ToggleButton, Button, Tooltip, Input, Box, Slider, CircularProgress } from '@mui/material';
 import { fixNFTURL } from './utilities';
 import Web3 from 'web3';
 import NFT from './NFT';
 
 function CreateAuction(props) {
-    useEffect(() => {
-        if (props.nfts.length > 0) {
-            setSelectedNft(props.nfts[0]);
-        }
-    }, [props.nfts]);
-
+    
     const timeOptions = Object.freeze(["hours", "days", "weeks"]);
     const displayOptions = Object.freeze(["highlight", "search", "selected"]);
     
@@ -23,7 +18,8 @@ function CreateAuction(props) {
     const [ tokenId, setTokenId ] = useState("");
     const [ selectedNft, setSelectedNft ] = useState({});
     const [ display, setDisplay ] = useState(displayOptions[0]);
-
+    const [ loading, setLoading ] = useState(true);
+    
     const resetCreateAuction = () => {
         setAlignment("eth");
         setBiddingTime(timeOptions[0]);
@@ -31,11 +27,36 @@ function CreateAuction(props) {
         setAuctionTime("");
         setStartingBid("");
     }
-
+    
+    const resetManualSearch = () => {
+        setSearch("");
+        setTokenId("");
+    }
+    
     const blocksFromTime = () => {
         let timeMultiplier = (biddingTime === timeOptions[0] ? 1 : biddingTime === timeOptions[1] ? 24 : 24 * 7);
         return Math.ceil(Number(auctionTime) * 60 * 60 * timeMultiplier / 13);
     }
+    
+    useEffect(() => {
+        console.log(props.nfts, props.nftQty);
+        if (props.nfts.length > 0) {
+            setSelectedNft(props.nfts[0]);
+            setLoading(false);
+        }
+        else if (props.nftQty > 0) {
+            setLoading(true);
+        }
+        else {
+            setLoading(false);
+        }
+    }, [props.nfts, props.nftQty]);
+    
+    useEffect(() => {
+        if (display === displayOptions[0]) {
+            document.getElementById("auctionContainer")?.scrollTo(0, 0);
+        }
+    }, [display]);
 
     return (
         <div style={{textAlign: "left", width: "500px", margin: "50px auto", padding: "0px 20px", border: "1px solid black"}}>   
@@ -81,6 +102,7 @@ function CreateAuction(props) {
                                 setSelectedNft(props.nfts[0]);
                             }
                             setDisplay(displayOptions[0]);
+                            resetManualSearch();
                         }}
                     >
                         Cancel
@@ -91,14 +113,19 @@ function CreateAuction(props) {
                             if (Web3.utils.isAddress(search)) {
                                 try {
                                     const options = {chain: "eth", address: search, token_id: tokenId}
+                                    console.log(0);
                                     const meta = await props.Moralis.Web3API.token.getTokenIdMetadata(options);
-                                    console.log(meta);
+                                    console.log(1);
                                     const result = await props.pushNftResult(meta);
+                                    console.log(2);
                                     setSelectedNft(result);
-                                    setDisplay(displayOptions[0]); // need to find a way to fix the CORS
+                                    console.log(3);
+                                    setDisplay(displayOptions[0]);
+                                    console.log(4);
                                 } catch(err) {
-
+                                    console.log("error");
                                 }
+                                resetManualSearch();
                             }
                         }}
                     >
@@ -113,18 +140,19 @@ function CreateAuction(props) {
             </div>
             :
             props.nfts.length > 0 ?
-            <div style={{
+            <div
+                id="auctionContainer"
+                style={{
                 overflow: "scroll",
                 height: "400px"
             }}>
                 <ToggleButtonGroup
-                    orientation="vertical"
                     exclusive
+                    orientation="vertical"
                     value={selectedNft}
                     style={{width: "100%"}}
                     onChange={(event, newValue) => {
                         if (newValue !== null) {
-                            console.log(newValue);
                             let nft = props.nfts?.find(n => n.id === newValue);
                             if (typeof nft === "object") {
                                 setSelectedNft(nft);
@@ -156,7 +184,7 @@ function CreateAuction(props) {
                             setDisplay(displayOptions[1]);
                         }}    
                     >                      
-                        <h4 style={{margin: "auto"}}>Search {props.nftQty - props.nfts.length} more nfts...</h4>
+                        <h4 style={{margin: "auto"}}>Search manually...</h4>
                     </Button>
                 </div>
                 :
@@ -178,6 +206,13 @@ function CreateAuction(props) {
                 </div>
                 <div className="convenience-container">
                     {selectedNft.description}
+                </div>
+                <div className="convenience-container">
+                    {selectedNft.id === undefined ?
+                    <span></span>
+                    :                    
+                    <a target="_blank" rel="noreferrer" href={`https://opensea.io/assets/` + selectedNft.id}>View on OpenSea</a>
+                    }
                 </div>
             </div>
             }
@@ -273,7 +308,7 @@ function CreateAuction(props) {
                     max={100}
                     valueLabelDisplay="auto"
                     valueLabelFormat={value => {
-                    return `${100-value}%`;
+                        return `${100-value}%`;
                     }}
                 />
                 </Box>
@@ -287,26 +322,26 @@ function CreateAuction(props) {
             <div className="convenience-container" style={{display: "flex", justifyContent: "space-between", alignItems: "center", color: "grey"}} >
             <div>        
                 <div>
-                duration: 
+                    duration: 
                 </div>
                 <div>
-                {blocksFromTime()} blocks
-                </div>
-            </div>
-            <div>
-                <div>
-                bidding: 
-                </div>
-                <div>
-                {Math.round(blocksFromTime() * (closingPerc / 100))} blocks
+                    {blocksFromTime()} blocks
                 </div>
             </div>
             <div>
                 <div>
-                closing: 
+                    bidding: 
                 </div>
                 <div>
-                {Math.round(blocksFromTime() * (1 - closingPerc / 100))} blocks
+                    {Math.round(blocksFromTime() * (closingPerc / 100))} blocks
+                </div>
+            </div>
+            <div>
+                <div>
+                    closing: 
+                </div>
+                <div>
+                    {Math.round(blocksFromTime() * (1 - closingPerc / 100))} blocks
                 </div>
             </div>
             </div>
@@ -319,6 +354,16 @@ function CreateAuction(props) {
                 style={{fontWeight: "bold", fontSize: "30px"}}>
                 create auction
             </Button>
+            </div>
+        </div>
+        :
+        loading === true ?
+        <div style={{textAlign: "center", margin: "30px"}}>
+            <div className="convenience-container">
+                <CircularProgress />
+            </div>
+            <div className="convenience-container">
+                <h3>loading your NFTs</h3>
             </div>
         </div>
         :

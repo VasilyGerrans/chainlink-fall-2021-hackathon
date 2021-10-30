@@ -6,7 +6,10 @@ export function ellipsisAddress(address = '', width = 10) {
 }
 
 export function fixNFTURL(url) {
-    if (url.startsWith("ipfs")) {
+    if (url === "" || url ==="#") {
+        return "#";
+    }
+    else if (url.startsWith("ipfs")) {
         return "https://ipfs.moralis.io:2053/ipfs/" + url.split("ipfs://ipfs/").slice(0)[1];
     }
     else {

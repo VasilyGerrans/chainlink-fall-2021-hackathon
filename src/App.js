@@ -25,7 +25,6 @@ function App() {
     if (accounts.length > 0) {
       setWallet(accounts[0]);
       (async () => {
-        console.log("ACCS");
         getNFTs();
       })();
     }
@@ -35,7 +34,6 @@ function App() {
   }
 
   const getNFTs = async () => {
-    console.log("LAUNCHED NFT SEARCH");
     const options = {chain: 'eth', address: '0x139a0975ea36cec4c59447002a875749ac9c460f'}
     const NFTs = await Moralis.Web3API.account.getNFTs(options);
 
@@ -54,7 +52,7 @@ function App() {
         let json = await response.json();
         let src = await fetch(fixNFTURL(json.image));
         if (src.status === 200) {
-          arr.push({...json, id: NFTs.result[i].token_address + "-" + NFTs.result[i].token_id});
+          arr.push({...json, id: NFTs.result[i].token_address + "/" + NFTs.result[i].token_id});
         }
         else { 
           increment++;
@@ -78,14 +76,27 @@ function App() {
   }, []);
 
   const pushNftResult = async newResult => {
-    let response = await fetch(newResult.token_uri);
-    let json = await response.json();
-    let src = await fetch(fixNFTURL(json.image));
-    let arr = nfts;
-    arr.unshift(src);
-    arr.pop();
-    setNfts(src);
-    return src;
+    try {
+      let response = await fetch(newResult.token_uri);
+      let json = await response.json();
+      let src = await fetch(fixNFTURL(json.image));
+      let arr = nfts;
+      arr.unshift(src);
+      arr.pop();
+      setNfts(src);
+      return src;
+    } catch (err) {
+      console.log(newResult);
+      let src = {
+        name: newResult.name ? newResult.name : "Failed to load name", 
+        description: newResult.description ? newResult.description : "", 
+        image: "#"
+      };
+      let arr = nfts;
+      arr.unshift(src);
+      arr.pop();
+      return src;
+    }
   }
 
   const initWeb3 = async () => {
