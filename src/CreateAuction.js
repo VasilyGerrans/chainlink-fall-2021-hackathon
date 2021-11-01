@@ -112,12 +112,15 @@ function CreateAuction(props) {
                             Clear
                         </Button>
                         <Button onClick={async () => {
-                            if (typeof Number(search) !== "number") {
+                            resetErrors();
+                            if (!Web3.utils.isAddress(search) || !Web3.utils.isAddress(props.wallet)) {
+                                setError(true);
+                                setErrMsg("Please, enter a valid NFT contract address.");
+                            } else if (typeof Number(token) !== "number" || token.length === 0) {
                                 setTkErr(true);
                                 setTknMsg("Please write a valid number for token id.");
                             }
-                            else if (Web3.utils.isAddress(search) && Web3.utils.isAddress(props.wallet)) {
-                                resetErrors();                              
+                            else {
                                 try {
                                     setLoading(true);
                                     let meta = await props.Moralis.Cloud.run("getAddressNFT", {
@@ -142,9 +145,6 @@ function CreateAuction(props) {
                                     setTknMsg("No corresponding NFT found. You may have entered an invalid address or id, or you are referring to a lazy minted NFT that is not on the blockchain yet.");
                                     setLoading(false);
                                 }
-                            } else {
-                                setError(true);
-                                setErrMsg("Please, enter a valid NFT contract address.");
                             }
                         }}>
                             Search

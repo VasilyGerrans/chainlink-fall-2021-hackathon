@@ -23,7 +23,6 @@ function NFT(props) {
                 <img width="400" src={fixUrl(props.data.image)} />
                 :
                 <video width="400" src={fixUrl(props.data.animation_url)} controls poster={fixUrl(props.data.image)}>
-
                 </video>
                 }
                 <h4 style={{margin: "auto"}}>{props.data.name}</h4>
