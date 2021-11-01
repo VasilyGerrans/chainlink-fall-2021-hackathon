@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { ToggleButtonGroup, ToggleButton, Button, Tooltip, Input, Box, Slider, CircularProgress } from '@mui/material';
+import { ToggleButtonGroup, ToggleButton, Button, Tooltip, Input, Box, Slider, CircularProgress, TextField } from '@mui/material';
 import { fixNFTURL } from './utilities';
 import Web3 from 'web3';
 import NFT from './NFT';
 
 function CreateAuction(props) {
-    
     const timeOptions = Object.freeze(["hours", "days", "weeks"]);
-    const displayOptions = Object.freeze(["highlight", "search", "selected"]);
     
     const [ alignment, setAlignment ] = useState("eth");
     const [ biddingTime, setBiddingTime ] = useState(timeOptions[0]); 
@@ -15,10 +13,13 @@ function CreateAuction(props) {
     const [ auctionTime, setAuctionTime ] = useState("");
     const [ startingBid, setStartingBid ] = useState("");
     const [ search, setSearch ] = useState("");
-    const [ tokenId, setTokenId ] = useState("");
-    const [ selectedNft, setSelectedNft ] = useState({});
-    const [ display, setDisplay ] = useState(displayOptions[0]);
-    const [ loading, setLoading ] = useState(true);
+    const [ token, setToken ] = useState("");
+    const [ loading, setLoading ] = useState(false);
+    const [ errMsg, setErrMsg] = useState("");
+    const [ error, setError] = useState(false);
+    const [ tknMsg, setTknMsg] = useState("");
+    const [ tkErr, setTkErr] = useState(false);
+    const [ loadedNft, setLoadedNft ] = useState({});
     
     const resetCreateAuction = () => {
         setAlignment("eth");
@@ -30,347 +31,281 @@ function CreateAuction(props) {
     
     const resetManualSearch = () => {
         setSearch("");
-        setTokenId("");
+        setToken("");
+        setError(false);
+        setErrMsg("");
+        setTkErr(false);
+        setTknMsg("");
     }
+
+    const resetErrors = () => {
+        setError(false);
+        setErrMsg("");
+        setTkErr(false);
+        setTknMsg("");
+    }
+
+    const resetNft = () => {
+        console.log("CAlled");
+        setLoadedNft({});
+    }
+
+    useEffect(() => {
+        console.log('reset to', loadedNft);
+    }, [loadedNft]);
     
     const blocksFromTime = () => {
         let timeMultiplier = (biddingTime === timeOptions[0] ? 1 : biddingTime === timeOptions[1] ? 24 : 24 * 7);
         return Math.ceil(Number(auctionTime) * 60 * 60 * timeMultiplier / 13);
-    }
-    
-    useEffect(() => {
-        console.log(props.nfts, props.nftQty);
-        if (props.nfts.length > 0) {
-            setSelectedNft(props.nfts[0]);
-            setLoading(false);
-        }
-        else if (props.nftQty > 0) {
-            setLoading(true);
-        }
-        else {
-            setLoading(false);
-        }
-    }, [props.nfts, props.nftQty]);
-    
-    useEffect(() => {
-        if (display === displayOptions[0]) {
-            document.getElementById("auctionContainer")?.scrollTo(0, 0);
-        }
-    }, [display]);
+    }    
 
     return (
         <div style={{textAlign: "left", width: "500px", margin: "50px auto", padding: "0px 20px", border: "1px solid black"}}>   
-        {props.nfts.length > 0 ?
-        <div>
-            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-            <h2>select nft</h2>
-            <h2 style={{cursor: "pointer"}} onClick={() => {
-                props.history.push("/");
-                resetCreateAuction();
-            }}>X</h2>
-            </div>
-            {display === displayOptions[1] ?
-            <div style={{textAlign: "center", height: "400px", display: "flex", alignItems: "center"}}>
-                <div>
-                    <Input 
-                        placeholder="enter your NFT contract address here" 
-                        style={{
-                            width: "470px",
-                            marginBottom: "30px"
-                        }}
-                        value={search}
-                        onChange={(event) => {
-                            setSearch(event.target.value);
-                        }}
-                    />
-                    <br/>
-                    <Input 
-                        placeholder="enter your token id here" 
-                        style={{
-                            width: "470px",
-                            marginBottom: "30px"
-                        }}
-                        value={tokenId}
-                        onChange={(event) => {
-                            setTokenId(event.target.value);
-                        }}
-                    />
-                    <Button 
-                        color="secondary"
-                        onClick={() => {
-                            if (props.nfts.length > 0) {
-                                setSelectedNft(props.nfts[0]);
-                            }
-                            setDisplay(displayOptions[0]);
-                            resetManualSearch();
-                        }}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={async () => {
-                            console.log(search);
-                            if (Web3.utils.isAddress(search)) {
-                                try {
-                                    const options = {chain: "eth", address: search, token_id: tokenId}
-                                    console.log(0);
-                                    const meta = await props.Moralis.Web3API.token.getTokenIdMetadata(options);
-                                    console.log(1);
-                                    const result = await props.pushNftResult(meta);
-                                    console.log(2);
-                                    setSelectedNft(result);
-                                    console.log(3);
-                                    setDisplay(displayOptions[0]);
-                                    console.log(4);
-                                } catch(err) {
-                                    console.log("error");
-                                }
-                                resetManualSearch();
-                            }
-                        }}
-                    >
-                        Search
-                    </Button>
-                </div>
-            </div>
-            :
-            display === displayOptions[2] ?
             <div>
-                SELECTED
-            </div>
-            :
-            props.nfts.length > 0 ?
-            <div
-                id="auctionContainer"
-                style={{
-                overflow: "scroll",
-                height: "400px"
-            }}>
-                <ToggleButtonGroup
-                    exclusive
-                    orientation="vertical"
-                    value={selectedNft}
-                    style={{width: "100%"}}
-                    onChange={(event, newValue) => {
-                        if (newValue !== null) {
-                            let nft = props.nfts?.find(n => n.id === newValue);
-                            if (typeof nft === "object") {
-                                setSelectedNft(nft);
+                <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                    <div></div>
+                    <h2 style={{cursor: "pointer"}} onClick={() => {
+                        props.history.push("/");
+                        resetCreateAuction();
+                    }}>X</h2>
+                </div>
+                <div style={{textAlign: "center", display: "flex", alignItems: "center"}}>
+                    {loading === true ? 
+                    <div style={{margin: "auto"}}>
+                        <CircularProgress />
+                    </div>
+                    :
+                    loadedNft.name === undefined ?
+                    <div>
+                        <TextField
+                            error={error}
+                            helperText={errMsg}
+                            variant="standard"
+                            placeholder="enter your NFT contract address here" 
+                            style={{
+                                width: "470px",
+                                marginBottom: "30px"
+                            }}
+                            value={search}
+                            onChange={(event) => {
+                                setSearch(event.target.value);
+                            }}
+                        />
+                        <TextField
+                            error={tkErr}
+                            helperText={tknMsg}
+                            type="number"
+                            variant="standard"
+                            placeholder="enter your NFT token id here" 
+                            style={{
+                                width: "470px",
+                                marginBottom: "30px"
+                            }}
+                            value={token}
+                            onChange={(event) => {
+                                setToken(event.target.value);
+                            }}
+                        />
+                        <Button onClick={() => {
+                            resetManualSearch();
+                        }}>
+                            Clear
+                        </Button>
+                        <Button onClick={async () => {
+                            if (typeof Number(search) !== "number") {
+                                setTkErr(true);
+                                setTknMsg("Please write a valid number for token id.");
                             }
-                            else {
-                                setSelectedNft("");
+                            else if (Web3.utils.isAddress(search) && Web3.utils.isAddress(props.wallet)) {
+                                resetErrors();                              
+                                try {
+                                    setLoading(true);
+                                    let meta = await props.Moralis.Cloud.run("getAddressNFT", {
+                                        token_address: Web3.utils.toChecksumAddress(search),
+                                        token_id: token
+                                    });
+                                    console.log(meta);  
+                                    if (meta.metadata !== undefined) {
+                                        setLoadedNft({...JSON.parse(meta.metadata), ...meta});
+                                    } else if (meta.text !== undefined) {
+                                        setLoadedNft({...JSON.parse(meta.text), ...meta});
+                                    } else if (meta.name !== undefined) {
+                                        setLoadedNft(meta);
+                                    } else {
+                                        setTkErr(true);
+                                        setTknMsg("No corresponding NFT found. You may have entered an invalid address or id, or you are referring to a lazy minted NFT that is not on the blockchain yet.");
+                                        setLoading(false);
+                                    }
+                                    setLoading(false);
+                                } catch (err) {
+                                    setTkErr(true);
+                                    setTknMsg("No corresponding NFT found. You may have entered an invalid address or id, or you are referring to a lazy minted NFT that is not on the blockchain yet.");
+                                    setLoading(false);
+                                }
+                            } else {
+                                setError(true);
+                                setErrMsg("Please, enter a valid NFT contract address.");
                             }
-                        }
-                    }}
-                >
-                    {props.nfts.map(n => {
-                        return (
-                        <ToggleButton key={n.id} value={n.id} aria-label="list">
-                            <NFT
-                                name={n.name}
-                                descritpion={n.descritpion}
-                                src={fixNFTURL(n.image)}
-                            />
-                        </ToggleButton>
-                        )
-                    })}
-                </ToggleButtonGroup>
-                {props.nftQty > 10 ?
-                <div style={{justifyContent: "left"}}>
-                    <Button 
-                        style={{width: "500px"}}
-                        onClick={() => {
-                            setSelectedNft({});
-                            setDisplay(displayOptions[1]);
-                        }}    
-                    >                      
-                        <h4 style={{margin: "auto"}}>Search manually...</h4>
-                    </Button>
+                        }}>
+                            Search
+                        </Button>
+                    </div>
+                    : 
+                    <div className="convenience-container">
+                        <NFT 
+                            data={loadedNft}
+                        />
+                        <Button onClick={() => {
+                            resetManualSearch();
+                            resetNft();
+                        }}>
+                            Clear
+                        </Button>
+                    </div>
+                    }
+                </div>
+                <br />            
+                <div className="convenience-container">
+                <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                    <div>
+                    <Tooltip title="Determines the starting amount bidders will have to bid." placement="left">
+                        <Input
+                            type="number"
+                            placeholder="starting bid"
+                            value={startingBid} 
+                            onChange={event => {
+                                if (event.target.value > 0) {
+                                    setStartingBid(event.target.value);
+                                }
+                                else if (event.target.value === "0" || event.target.value === "") {
+                                    setStartingBid("");
+                                }
+                            }}
+                        />
+                    </Tooltip>
+                    </div>
+                    <div>
+                    <ToggleButtonGroup
+                        exclusive
+                        value={alignment}
+                        onChange={(event, newAlignment) => {
+                            if (newAlignment !== null) {
+                                setAlignment(newAlignment);
+                            }
+                        }}
+                    >
+                        <ToggleButton size="medium" value="eth">WETH</ToggleButton>
+                        <ToggleButton size="medium" value="usdc">USDC</ToggleButton>
+                    </ToggleButtonGroup>
+                    </div>
+                </div>
+                </div>
+                <div className="convenience-container">
+                <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                    <div>
+                    <Tooltip title="Determines how long the auction will last." placement="left">
+                        <Input
+                        type="number"
+                        placeholder="auction time"
+                        value={auctionTime}                      
+                        onChange={event => {
+                            if (event.target.value > 0) {
+                            setAuctionTime(event.target.value);
+                            }
+                            else if (event.target.value === "0" || event.target.value === "") {
+                            setAuctionTime("");
+                            }
+                        }}
+                        />
+                    </Tooltip>
+                    </div>
+                    <div>
+                    <ToggleButtonGroup
+                        exclusive
+                        value={biddingTime}
+                        onChange={(event, newAlignment) => {
+                            if (newAlignment !== null) {
+                                setBiddingTime(newAlignment);
+                            }
+                        }}
+                    >
+                        <ToggleButton size="medium" value={timeOptions[0]}>{timeOptions[0]}</ToggleButton>
+                        <ToggleButton size="medium" value={timeOptions[1]}>{timeOptions[1]}</ToggleButton>
+                        <ToggleButton size="medium" value={timeOptions[2]}>{timeOptions[2]}</ToggleButton>
+                    </ToggleButtonGroup>
+                    </div>                  
+                </div>
+                <div>      
+                </div>
+                </div>              
+                {typeof closingPerc === "number" ?
+                <div className="convenience-container" style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                    <Tooltip title="Determines the percent of the auction during which it can (randomly) end." placement="left">
+                    <div>
+                        closing time
+                    </div>
+                    </Tooltip>
+                    <Box sx={{width: 200}}>
+                    <Slider
+                        value={closingPerc}
+                        onChange={(event, newValue) => {
+                        setClosingPerc(Math.max(20, Math.min(80, newValue)));
+                        }}
+                        track="inverted"
+                        min={0}
+                        step={1}
+                        max={100}
+                        valueLabelDisplay="auto"
+                        valueLabelFormat={value => {
+                            return `${100-value}%`;
+                        }}
+                    />
+                    </Box>
                 </div>
                 :
                 <span></span>
                 }
-            </div>
-            :
-            <div></div>
-            }
-            <br/>
-            {selectedNft === {} ?
-            <span></span>
-            :
-            <div>
-                <div className="convenience-container">
-                    <h2>
-                        {selectedNft.name}
-                    </h2>
-                </div>
-                <div className="convenience-container">
-                    {selectedNft.description}
-                </div>
-                <div className="convenience-container">
-                    {selectedNft.id === undefined ?
-                    <span></span>
-                    :                    
-                    <a target="_blank" rel="noreferrer" href={`https://opensea.io/assets/` + selectedNft.id}>View on OpenSea</a>
-                    }
-                </div>
-            </div>
-            }
-            <div className="convenience-container">
-            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                <div>
-                <Tooltip title="Determines the starting amount bidders will have to bid." placement="left">
-                    <Input
-                        type="number"
-                        placeholder="starting bid"
-                        value={startingBid} 
-                        onChange={event => {
-                            if (event.target.value > 0) {
-                                setStartingBid(event.target.value);
-                            }
-                            else if (event.target.value === "0" || event.target.value === "") {
-                                setStartingBid("");
-                            }
-                        }}
-                    />
-                </Tooltip>
+                {auctionTime === "" || Number(auctionTime) === 0 ?
+                <div></div>
+                :
+                <div className="convenience-container" style={{display: "flex", justifyContent: "space-between", alignItems: "center", color: "grey"}} >
+                <div>        
+                    <div>
+                        duration: 
+                    </div>
+                    <div>
+                        {blocksFromTime()} blocks
+                    </div>
                 </div>
                 <div>
-                <ToggleButtonGroup
-                    exclusive
-                    value={alignment}
-                    onChange={(event, newAlignment) => {
-                        if (newAlignment !== null) {
-                            setAlignment(newAlignment);
-                        }
-                    }}
-                >
-                    <ToggleButton size="medium" value="eth">WETH</ToggleButton>
-                    <ToggleButton size="medium" value="usdc">USDC</ToggleButton>
-                </ToggleButtonGroup>
-                </div>
-            </div>
-            </div>
-            <div className="convenience-container">
-            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                <div>
-                <Tooltip title="Determines how long the auction will last." placement="left">
-                    <Input
-                    type="number"
-                    placeholder="auction time"
-                    value={auctionTime}                      
-                    onChange={event => {
-                        if (event.target.value > 0) {
-                        setAuctionTime(event.target.value);
-                        }
-                        else if (event.target.value === "0" || event.target.value === "") {
-                        setAuctionTime("");
-                        }
-                    }}
-                    />
-                </Tooltip>
+                    <div>
+                        bidding: 
+                    </div>
+                    <div>
+                        {Math.round(blocksFromTime() * (closingPerc / 100))} blocks
+                    </div>
                 </div>
                 <div>
-                <ToggleButtonGroup
-                    exclusive
-                    value={biddingTime}
-                    onChange={(event, newAlignment) => {
-                        if (newAlignment !== null) {
-                            setBiddingTime(newAlignment);
-                        }
-                    }}
-                >
-                    <ToggleButton size="medium" value={timeOptions[0]}>{timeOptions[0]}</ToggleButton>
-                    <ToggleButton size="medium" value={timeOptions[1]}>{timeOptions[1]}</ToggleButton>
-                    <ToggleButton size="medium" value={timeOptions[2]}>{timeOptions[2]}</ToggleButton>
-                </ToggleButtonGroup>
-                </div>                  
-            </div>
-            <div>      
-            </div>
-            </div>              
-            {typeof closingPerc === "number" ?
-            <div className="convenience-container" style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                <Tooltip title="Determines the percent of the auction during which it can (randomly) end." placement="left">
-                <div>
-                    closing time
+                    <div>
+                        closing: 
+                    </div>
+                    <div>
+                        {Math.round(blocksFromTime() * (1 - closingPerc / 100))} blocks
+                    </div>
                 </div>
-                </Tooltip>
-                <Box sx={{width: 200}}>
-                <Slider
-                    value={closingPerc}
-                    onChange={(event, newValue) => {
-                    setClosingPerc(Math.max(20, Math.min(80, newValue)));
-                    }}
-                    track="inverted"
-                    min={0}
-                    step={1}
-                    max={100}
-                    valueLabelDisplay="auto"
-                    valueLabelFormat={value => {
-                        return `${100-value}%`;
-                    }}
-                />
-                </Box>
-            </div>
-            :
-            <span></span>
-            }
-            {auctionTime === "" || Number(auctionTime) === 0 ?
-            <div></div>
-            :
-            <div className="convenience-container" style={{display: "flex", justifyContent: "space-between", alignItems: "center", color: "grey"}} >
-            <div>        
-                <div>
-                    duration: 
                 </div>
-                <div>
-                    {blocksFromTime()} blocks
+                }
+                <div style={{margin: "20px", textAlign: "center"}}>
+                <Button 
+                    size="large" 
+                    disabled={!(startingBid !== "" && Number(startingBid) > 0 &&
+                    auctionTime !== "" && Number(auctionTime) > 0 && 
+                    loadedNft !== {})}
+                    style={{fontWeight: "bold", fontSize: "30px"}}>
+                    create auction
+                </Button>
                 </div>
-            </div>
-            <div>
-                <div>
-                    bidding: 
-                </div>
-                <div>
-                    {Math.round(blocksFromTime() * (closingPerc / 100))} blocks
-                </div>
-            </div>
-            <div>
-                <div>
-                    closing: 
-                </div>
-                <div>
-                    {Math.round(blocksFromTime() * (1 - closingPerc / 100))} blocks
-                </div>
-            </div>
-            </div>
-            }
-            <div style={{margin: "20px", textAlign: "center"}}>
-            <Button 
-                size="large" 
-                disabled={!(startingBid !== "" && Number(startingBid) > 0 &&
-                auctionTime !== "" && Number(auctionTime) > 0)}
-                style={{fontWeight: "bold", fontSize: "30px"}}>
-                create auction
-            </Button>
-            </div>
-        </div>
-        :
-        loading === true ?
-        <div style={{textAlign: "center", margin: "30px"}}>
-            <div className="convenience-container">
-                <CircularProgress />
-            </div>
-            <div className="convenience-container">
-                <h3>loading your NFTs</h3>
-            </div>
-        </div>
-        :
-        <div style={{textAlign: "center"}}>
-            <h2>No NFTs detected in your wallet</h2>
-        </div>
-        }
+            </div>        
         </div>
     )
 }
