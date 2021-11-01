@@ -82,3 +82,8 @@ code {
 .MuiSlider-rail {
   background-color: red !important;
 }
+
+.miniViewAuction {
+  display: inline-block;
+  margin: 10px;
+}

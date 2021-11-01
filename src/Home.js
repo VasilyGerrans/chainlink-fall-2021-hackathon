@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@mui/material';
+import MiniViewAuction from './MiniViewAuction';
 
 function Home(props) {
     return (
@@ -21,6 +22,21 @@ function Home(props) {
                 </p>
             </div>
             <div>
+                <h1 style={{textAlign: "left"}}>Live auctions</h1>
+                <div style={{textAlign: "left"}}>
+                    <MiniViewAuction 
+                        image={"https://lh3.googleusercontent.com/Fxazoi72wuKiNJ5qdeHOwVvnjlFAhUXRFWPoli4655grNCBIRC6zZa_ovROs8F6f5FywTjXJEIg8zSgusxoUhvM4TtHuO7ikub9n=w600"}
+                        closingPercentage={10}
+                        progressPercentage={87}
+                    />
+                    <MiniViewAuction 
+                        image={"https://lh3.googleusercontent.com/HZZZwVcJn58z8AnLvc0HrVFkVDFLy--zzE18g5Qvuh_gRN4pJ9DMOayu_sNzY3ltm0r5SgkkNviu655bKKE9wkiIO2ibhe_VJKfnrko=w600"}
+                        closingPercentage={50}
+                        progressPercentage={50}
+                    />
+                </div>
+            </div>
+            <div>
                 <Button 
                     variant="outlined" 
                     color="primary" 
@@ -31,7 +47,8 @@ function Home(props) {
                     }}
                     disabled={false}
                     style={{
-                        fontSize: "30px"
+                        fontSize: "30px", 
+                        margin: "30px"
                     }}
                 >
                     create an auction

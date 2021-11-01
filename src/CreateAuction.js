@@ -124,8 +124,9 @@ function CreateAuction(props) {
                                 try {
                                     setLoading(true);
                                     let meta = await props.Moralis.Cloud.run("getAddressNFT", {
-                                        token_address: Web3.utils.toChecksumAddress(search),
-                                        token_id: token
+                                        address: Web3.utils.toChecksumAddress(search),
+                                        token_id: token, 
+                                        chain: "kovan"
                                     });
                                     console.log(meta);  
                                     if (meta.metadata !== undefined) {
@@ -137,7 +138,6 @@ function CreateAuction(props) {
                                     } else {
                                         setTkErr(true);
                                         setTknMsg("No corresponding NFT found. You may have entered an invalid address or id, or you are referring to a lazy minted NFT that is not on the blockchain yet.");
-                                        setLoading(false);
                                     }
                                     setLoading(false);
                                 } catch (err) {
@@ -299,8 +299,8 @@ function CreateAuction(props) {
                 <Button 
                     size="large" 
                     disabled={!(startingBid !== "" && Number(startingBid) > 0 &&
-                    auctionTime !== "" && Number(auctionTime) > 0 && 
-                    loadedNft !== {})}
+                        auctionTime !== "" && Number(auctionTime) > 0 && 
+                        loadedNft.token_address != undefined)}
                     style={{fontWeight: "bold", fontSize: "30px"}}>
                     create auction
                 </Button>

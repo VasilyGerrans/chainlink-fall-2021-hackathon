@@ -12,8 +12,6 @@ import './App.css';
 function App() {
   const { Moralis } = useMoralis();
   const [ nfts, setNfts ] = useState([]);
-  const [ rawAddressResults, setRawAddressResults ] = useState({});
-  const [ nftQty, setNftQty ] = useState(0);
   const [ validNetwork, setValidNetwork ] = useState(false);
   const [ wallet, setWallet ] = useState("");
 
@@ -24,21 +22,10 @@ function App() {
   const handleAccountsChanged = accounts => {
     if (accounts.length > 0) {
       setWallet(accounts[0]);
-      (async () => {
-        getNFTs();
-      })();
     }
     else {
       setWallet('');
     }
-  }
-
-  const getNFTs = async () => {
-    /* const result = await Moralis.Cloud.run("testRequest", {url: "https://goblingoonslair.com/goblin/775"});
-    console.log(result); */
-    // const nftDigest = await Moralis.Cloud.run("getAddressNFTs", {address: "0x139a0975ea36cec4c59447002a875749ac9c460f", amount: 10});
-    // console.log(nftDigest);
-    //setNfts(nftDigest);
   }
 
   useEffect(() => {
@@ -162,11 +149,9 @@ function App() {
           <CreateAuction 
             wallet={wallet}
             nfts={nfts}
-            nftQty={nftQty}
             history={history}
             Moralis={Moralis}
             pushNftResult={pushNftResult}
-            rawAddressResults={rawAddressResults}
           />          
         </Route>
       </Switch>
