@@ -81,7 +81,7 @@ function CreateAuction(props) {
                             error={error}
                             helperText={errMsg}
                             variant="standard"
-                            placeholder="enter your NFT contract address here" 
+                            placeholder="NFT contract address" 
                             style={{
                                 width: "470px",
                                 marginBottom: "30px"
@@ -96,7 +96,7 @@ function CreateAuction(props) {
                             helperText={tknMsg}
                             type="number"
                             variant="standard"
-                            placeholder="enter your NFT token id here" 
+                            placeholder="NFT token id" 
                             style={{
                                 width: "470px",
                                 marginBottom: "30px"

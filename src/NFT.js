@@ -19,7 +19,13 @@ function NFT(props) {
     return (
         <div style={{justifyContent: "left", width: "500px"}}>
             <div>
+                {props.data.animation_url == null ?
                 <img width="400" src={fixUrl(props.data.image)} />
+                :
+                <video width="400" src={fixUrl(props.data.animation_url)} controls poster={fixUrl(props.data.image)}>
+
+                </video>
+                }
                 <h4 style={{margin: "auto"}}>{props.data.name}</h4>
                 <h4 style={{margin: "auto"}}>Amount: {props.data.amount}</h4>
                 <p>{props.data.description}</p>
