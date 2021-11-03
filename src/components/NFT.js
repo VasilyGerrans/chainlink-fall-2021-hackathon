@@ -17,7 +17,7 @@ function NFT(props) {
     }
 
     return (
-        <div className="NFT" style={{width: "500px", margin: "auto"}}>
+        <div className="NFT">
             <div>
                 <div>
                     {props.data.animation_url == null ?
