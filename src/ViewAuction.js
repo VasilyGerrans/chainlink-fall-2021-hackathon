@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Button } from '@mui/material';
+import { Link, useParams } from 'react-router-dom';
 import NFT from './components/NFT';
 
 function ViewAuction(props) {
@@ -15,7 +16,6 @@ function ViewAuction(props) {
         }
         else {
             let meta = await props.retrieveNFT(result.attributes.token_address, result.attributes.token_id, "eth");
-            console.log("META", meta);
             setLoadedNft(meta);
         }
     }
@@ -31,7 +31,19 @@ function ViewAuction(props) {
     return (
         <div>
             {badUrl === true ? 
-            <h1>404</h1>
+            <div>
+                <h1>404 – auction not found</h1>
+                <Link to="/">
+                    <Button
+                        variant="outlined" 
+                        color="primary" 
+                        size="large" 
+                        style={{fontSize: "30px"}}
+                    >
+                        home
+                    </Button>
+                </Link>
+            </div>
             :
             <div>
                 <NFT

@@ -1,7 +1,7 @@
 import React from 'react';
 
 function AuctionBar(props) {
-    return (
+    return (        
         <div style={{position: "relative"}}>
             <div style={{display: "flex", alignItems: "center", width: "100%"}}>
                 <div style={{backgroundColor: "blue", height: "5px", width: `${100 - props.closingPercentage}%`}}>                                

@@ -73,7 +73,7 @@ function Home(props) {
                                 id={auction.id}
                                 image={auction.attributes.src}
                                 closingPercentage={auction.attributes.closing_percentage}
-                                progressPercentage={0}
+                                progressPercentage={Math.floor(Math.random() * 100)}
                             />
                         )
                     })}                    
