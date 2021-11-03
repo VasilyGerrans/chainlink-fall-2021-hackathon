@@ -29,6 +29,22 @@ function App() {
     }
   }
 
+  const retrieveNFT = async (address, token, chain) => {
+    let meta = await Moralis.Cloud.run("getAddressNFT", {
+      address: Web3.utils.toChecksumAddress(address),
+      token_id: token, 
+      chain: chain
+    });
+    if (meta.metadata !== undefined) {
+      return {...JSON.parse(meta.metadata), ...meta};
+    } else if (meta.text !== undefined) {
+      return {...JSON.parse(meta.text), ...meta};
+    } else if (meta.name !== undefined) {
+      return meta;
+    }
+    return null;
+  }
+  
   useEffect(() => {
     (async () => {
       await initWeb3();
@@ -156,12 +172,15 @@ function App() {
             nfts={nfts}
             history={history}
             Moralis={Moralis}
+            retrieveNFT={retrieveNFT}
             pushNftResult={pushNftResult}
           />          
         </Route>
-        <Route path="/auction">
-          <ViewAuction
-
+        <Route path="/auction/:id">
+          <ViewAuction 
+            Moralis={Moralis}
+            isInitialized={isInitialized}
+            retrieveNFT={retrieveNFT}
           />
         </Route>
       </Switch>

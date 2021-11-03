@@ -17,18 +17,30 @@ function NFT(props) {
     }
 
     return (
-        <div style={{justifyContent: "left", width: "500px"}}>
+        <div className="NFT" style={{width: "500px", margin: "auto"}}>
             <div>
-                {props.data.animation_url == null ?
-                <img width="400" src={fixUrl(props.data.image)} />
-                :
-                <video width="400" src={fixUrl(props.data.animation_url)} controls poster={fixUrl(props.data.image)}>
-                </video>
-                }
-                <h4 style={{margin: "auto"}}>{props.data.name}</h4>
-                <h4 style={{margin: "auto"}}>Amount: {props.data.amount}</h4>
-                <p>{props.data.description}</p>
-                <p><a target="_blank" rel="noreferrer" href={'https://opensea.io/assets/' + props.data.token_address + '/' + props.data.token_id}>View on OpenSea</a></p>
+                <div>
+                    {props.data.animation_url == null ?
+                    <img 
+                        width="400" 
+                        src={fixUrl(props.data.image)} 
+                        alt={props.data.name}
+                    />
+                    :
+                    <video 
+                        width="400" 
+                        src={fixUrl(props.data.animation_url)} 
+                        controls 
+                        poster={fixUrl(props.data.image)} 
+                        alt={props.data.name}
+                    >
+                    </video>
+                    }
+                    <h4 style={{margin: "auto"}}>{props.data.name}</h4>
+                    <h4 style={{margin: "auto"}}>Amount: {props.data.amount}</h4>
+                    <p>{props.data.description}</p>
+                    <p><a target="_blank" rel="noreferrer" href={'https://opensea.io/assets/' + props.data.token_address + '/' + props.data.token_id}>View on OpenSea</a></p>
+                </div>
             </div>
         </div>
     )

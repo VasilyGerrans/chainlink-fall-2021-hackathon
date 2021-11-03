@@ -122,22 +122,28 @@ function CreateAuction(props) {
                             else {
                                 try {
                                     setLoading(true);
-                                    let meta = await props.Moralis.Cloud.run("getAddressNFT", {
+                                    let meta = await props.retrieveNFT(search, token, "eth");
+                                    /* let meta = await props.Moralis.Cloud.run("getAddressNFT", {
                                         address: Web3.utils.toChecksumAddress(search),
                                         token_id: token, 
                                         chain: "eth"
-                                    });
+                                    }); */
                                     console.log(meta);  
-                                    if (meta.metadata !== undefined) {
+                                    if (meta === null) {
+                                        setTkErr(true);
+                                        setTknMsg("No corresponding NFT found. You may have entered an invalid address or id, or you are referring to a lazy minted NFT that is not on the blockchain yet.");
+                                    }
+                                    else {
+                                        setLoadedNft(meta);
+                                    }
+                                    /* if (meta.metadata !== undefined) {
                                         setLoadedNft({...JSON.parse(meta.metadata), ...meta});
                                     } else if (meta.text !== undefined) {
                                         setLoadedNft({...JSON.parse(meta.text), ...meta});
                                     } else if (meta.name !== undefined) {
                                         setLoadedNft(meta);
                                     } else {
-                                        setTkErr(true);
-                                        setTknMsg("No corresponding NFT found. You may have entered an invalid address or id, or you are referring to a lazy minted NFT that is not on the blockchain yet.");
-                                    }
+                                    } */
                                     setLoading(false);
                                 } catch (err) {
                                     setTkErr(true);
@@ -152,6 +158,7 @@ function CreateAuction(props) {
                     : 
                     <div className="convenience-container">
                         <NFT 
+                            style={{justifyContent: "left"}}
                             data={loadedNft}
                         />
                         <Button onClick={() => {

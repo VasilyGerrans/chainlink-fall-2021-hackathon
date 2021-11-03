@@ -93,6 +93,11 @@ a {
   color: inherit;
 }
 
+.NFT a {
+  color: -webkit-link;
+  text-decoration: underline;
+}
+
 button {
   border-radius: 0px !important;
 }
