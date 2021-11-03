@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ToggleButtonGroup, ToggleButton, Button, Tooltip, Input, Box, Slider, CircularProgress, TextField } from '@mui/material';
-import { fixNFTURL } from './utilities';
 import Web3 from 'web3';
-import NFT from './NFT';
+import NFT from './components/NFT';
 
 function CreateAuction(props) {
     const timeOptions = Object.freeze(["hours", "days", "weeks"]);
@@ -64,10 +64,9 @@ function CreateAuction(props) {
             <div>
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                     <div></div>
-                    <h2 style={{cursor: "pointer"}} onClick={() => {
-                        props.history.push("/");
-                        resetCreateAuction();
-                    }}>X</h2>
+                    <Link onClick={resetCreateAuction} to="/">
+                        <h2 style={{cursor: "pointer"}}>X</h2>
+                    </Link>
                 </div>
                 <div style={{textAlign: "center", display: "flex", alignItems: "center"}}>
                     {loading === true ? 
@@ -126,7 +125,7 @@ function CreateAuction(props) {
                                     let meta = await props.Moralis.Cloud.run("getAddressNFT", {
                                         address: Web3.utils.toChecksumAddress(search),
                                         token_id: token, 
-                                        chain: "kovan"
+                                        chain: "eth"
                                     });
                                     console.log(meta);  
                                     if (meta.metadata !== undefined) {

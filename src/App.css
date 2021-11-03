@@ -87,3 +87,12 @@ code {
   display: inline-block;
   margin: 10px;
 }
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  border-radius: 0px !important;
+}

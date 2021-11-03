@@ -1,8 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
-import MiniViewAuction from './MiniViewAuction';
+import MiniViewAuction from './components/MiniViewAuction';
+
+const LazyMiniAuction = React.lazy(() => import('./components/MiniViewAuction'));
+
+const DisplayMiniAuction = props => (
+    <Suspense fallback={<MiniViewAuction id="" image="" />}>
+        <LazyMiniAuction {...props} />
+    </Suspense>
+)
 
 function Home(props) {
+    const [ loadedAuctions, setLoadedAuctions ] = useState([]);
+
+    const getDisplayAuctions = async () => {
+        const query = new props.Moralis.Query("auctions");
+        const result = await query.find();
+        setLoadedAuctions(result);
+    }
+
+    useEffect(() => {
+        if (props.isInitialized === true && loadedAuctions.length === 0) {
+            (async () => {
+                await getDisplayAuctions();
+            })();
+        }
+    }, [props.isInitialized]);
+
     return (
         <div>
             <div style={{"textAlign": "left"}}>
@@ -22,38 +47,38 @@ function Home(props) {
                 </p>
             </div>
             <div>
-                <h1 style={{textAlign: "left"}}>Live auctions</h1>
-                <div style={{textAlign: "left"}}>
-                    <MiniViewAuction 
-                        image={"https://lh3.googleusercontent.com/Fxazoi72wuKiNJ5qdeHOwVvnjlFAhUXRFWPoli4655grNCBIRC6zZa_ovROs8F6f5FywTjXJEIg8zSgusxoUhvM4TtHuO7ikub9n=w600"}
-                        closingPercentage={10}
-                        progressPercentage={87}
-                    />
-                    <MiniViewAuction 
-                        image={"https://lh3.googleusercontent.com/HZZZwVcJn58z8AnLvc0HrVFkVDFLy--zzE18g5Qvuh_gRN4pJ9DMOayu_sNzY3ltm0r5SgkkNviu655bKKE9wkiIO2ibhe_VJKfnrko=w600"}
-                        closingPercentage={50}
-                        progressPercentage={50}
-                    />
-                </div>
+                <Link to="/create">
+                    <Button 
+                        variant="outlined" 
+                        color="primary" 
+                        size="large" 
+                        style={{fontFamily: "Inconsolata,monospace"}}
+                        disabled={false}
+                        style={{
+                            fontSize: "30px", 
+                            margin: "30px"
+                        }}
+                    >
+                        create an auction
+                    </Button>
+                </Link>
             </div>
             <div>
-                <Button 
-                    variant="outlined" 
-                    color="primary" 
-                    size="large" 
-                    style={{fontFamily: "Inconsolata,monospace"}}
-                    onClick={() => {
-                        props.history.push("/create");
-                    }}
-                    disabled={false}
-                    style={{
-                        fontSize: "30px", 
-                        margin: "30px"
-                    }}
-                >
-                    create an auction
-                </Button>
-            </div>
+                <h1 style={{textAlign: "left"}}>Live auctions</h1>
+                <div style={{textAlign: "left"}}>
+                    {loadedAuctions.map(auction => {
+                        return (
+                            <DisplayMiniAuction
+                                key={auction.id}
+                                id={auction.id}
+                                image={auction.attributes.src}
+                                closingPercentage={auction.attributes.closing_percentage}
+                                progressPercentage={0}
+                            />
+                        )
+                    })}                    
+                </div>
+            </div>            
         </div>
     )
 }

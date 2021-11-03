@@ -8,9 +8,10 @@ import CreateAuction from './CreateAuction';
 import { Button } from '@mui/material';
 import Home from './Home';
 import './App.css';
+import ViewAuction from './ViewAuction';
 
 function App() {
-  const { Moralis } = useMoralis();
+  const { Moralis, isInitialized } = useMoralis();
   const [ nfts, setNfts ] = useState([]);
   const [ validNetwork, setValidNetwork ] = useState(false);
   const [ wallet, setWallet ] = useState("");
@@ -71,6 +72,9 @@ function App() {
         if (Number(id) === networkId) {
           setValidNetwork(true);
         }
+      })
+      .catch(err => {
+
       });
     }
 
@@ -142,7 +146,8 @@ function App() {
       <Switch>
         <Route exact path="/">
           <Home
-            history={history}
+            Moralis={Moralis}
+            isInitialized={isInitialized}
           />          
         </Route>
         <Route path="/create">
@@ -153,6 +158,11 @@ function App() {
             Moralis={Moralis}
             pushNftResult={pushNftResult}
           />          
+        </Route>
+        <Route path="/auction">
+          <ViewAuction
+
+          />
         </Route>
       </Switch>
     </div>

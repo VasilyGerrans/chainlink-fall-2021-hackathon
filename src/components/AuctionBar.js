@@ -10,7 +10,7 @@ function AuctionBar(props) {
                 </div>
             </div>
             <div style={{width: "100%", position: 'relative', left: "-4px"}}>
-                <div style={{position: "absolute", top: "-15px", left: `${props.progressPercentage}%`}}>
+                <div style={{position: "absolute", top: "-11px", left: `${props.progressPercentage}%`}}>
                     |
                 </div>
             </div>
