@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ToggleButtonGroup, ToggleButton, Button, Tooltip, Input, Box, Slider, CircularProgress, TextField } from '@mui/material';
+import { ButtonGroup } from "@mui/material"
 import Web3 from 'web3';
 import NFT from './components/NFT';
 
@@ -58,6 +59,14 @@ function CreateAuction(props) {
         let timeMultiplier = (biddingTime === timeOptions[0] ? 1 : biddingTime === timeOptions[1] ? 24 : 24 * 7);
         return Math.ceil(Number(auctionTime) * 60 * 60 * timeMultiplier / 13);
     }    
+
+    const sendNFTApprove = () => {
+
+    }
+
+    const sendCreateAuction = () => {
+        console.log(auctionTime, startingBid, token);
+    }
 
     return (
         <div style={{textAlign: "left", width: "500px", margin: "50px auto", padding: "0px 20px", border: "1px solid black"}}>   
@@ -302,14 +311,24 @@ function CreateAuction(props) {
                 </div>
                 }
                 <div style={{margin: "20px", textAlign: "center"}}>
+                <ButtonGroup size="medium" aria-label="small button group">
                 <Button 
-                    size="large" 
+                        onClick={sendNFTApprove}
                     disabled={!(startingBid !== "" && Number(startingBid) > 0 &&
                         auctionTime !== "" && Number(auctionTime) > 0 && 
                         loadedNft.token_address != undefined)}
-                    style={{fontWeight: "bold", fontSize: "30px"}}>
+                        >
+                        approve nft
+                    </Button>
+                    <Button 
+                        onClick={sendCreateAuction}
+                        disabled={!(startingBid !== "" && Number(startingBid) > 0 &&
+                            auctionTime !== "" && Number(auctionTime) > 0 && 
+                            loadedNft.token_address != undefined)}
+                        >
                     create auction
                 </Button>
+                </ButtonGroup>
                 </div>
             </div>        
         </div>
