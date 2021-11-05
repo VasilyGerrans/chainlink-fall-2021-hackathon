@@ -2,7 +2,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
 import { useEffect, useState } from 'react';
 import { useMoralis } from 'react-moralis';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { Switch, Route, useHistory, Link } from 'react-router-dom';
 import { ellipsisAddress, fixNFTURL } from './utilities';
 import CreateAuction from './CreateAuction';
 import { Button } from '@mui/material';
@@ -156,7 +156,9 @@ function App() {
       }
       <div>
         <h1>
-          Meltdown!
+          <Link to="/">
+            Meltdown!
+          </Link>
         </h1>
       </div>
       <Switch>
