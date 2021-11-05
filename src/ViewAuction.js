@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Tooltip } from '@mui/material';
+import { Button } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
 import NFT from './components/NFT';
-import AuctionBar from './components/AuctionBar';
 import { ellipsisAddress } from './utilities';
 
 function ViewAuction(props) {
