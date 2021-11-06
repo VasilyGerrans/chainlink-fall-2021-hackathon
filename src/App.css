@@ -69,7 +69,7 @@ code {
   justify-content: left !important;
 }
 
-.MuiButtonBase-root, input, div, p {
+.MuiButtonBase-root, input, div, p, text, span {
   font-family: 'Inconsolata',monospace, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif !important;

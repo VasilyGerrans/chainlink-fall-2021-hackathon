@@ -3,6 +3,7 @@ import { Button } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
 import NFT from './components/NFT';
 import { ellipsisAddress } from './utilities';
+import AuctionChart from './components/AuctionChart';
 
 function ViewAuction(props) {
     const { id } = useParams();
@@ -64,7 +65,10 @@ function ViewAuction(props) {
                         <div>
                             0.1 ETH
                         </div> */}
-                    </div>  
+                    </div> 
+                    <div>
+                        <AuctionChart />
+                    </div>
                     <div>
                         <h1 style={{margin: "0"}}>Top bidders:</h1>
                         <ol>
