@@ -132,11 +132,6 @@ function CreateAuction(props) {
                                 try {
                                     setLoading(true);
                                     let meta = await props.retrieveNFT(search, token, "eth");
-                                    /* let meta = await props.Moralis.Cloud.run("getAddressNFT", {
-                                        address: Web3.utils.toChecksumAddress(search),
-                                        token_id: token, 
-                                        chain: "eth"
-                                    }); */
                                     console.log(meta);  
                                     if (meta === null) {
                                         setTkErr(true);
@@ -145,14 +140,6 @@ function CreateAuction(props) {
                                     else {
                                         setLoadedNft(meta);
                                     }
-                                    /* if (meta.metadata !== undefined) {
-                                        setLoadedNft({...JSON.parse(meta.metadata), ...meta});
-                                    } else if (meta.text !== undefined) {
-                                        setLoadedNft({...JSON.parse(meta.text), ...meta});
-                                    } else if (meta.name !== undefined) {
-                                        setLoadedNft(meta);
-                                    } else {
-                                    } */
                                     setLoading(false);
                                 } catch (err) {
                                     setTkErr(true);
