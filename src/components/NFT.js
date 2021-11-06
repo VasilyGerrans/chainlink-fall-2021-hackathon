@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { CircularProgress } from '@mui/material';
 
 function NFT(props) {
+    const [ loading, setLoading ] = useState(true);
+
     const fixUrl = url => {
         if (url === "" || url ==="#" || url === undefined || url === null) {
             return "#";
@@ -21,11 +24,21 @@ function NFT(props) {
             <div>
                 <div>
                     {props.data.animation_url == null ?
-                    <img 
-                        width="400" 
-                        src={fixUrl(props.data.image)} 
-                        alt={props.data.name}
-                    />
+                    <div style={{width: "400px", minHeight: "300px"}}>
+                        <CircularProgress 
+                            style={loading === false ? {display: "none"} : {marginTop: "100px"}}
+                            width="400"
+                        />
+                        <img 
+                            width="400" 
+                            src={fixUrl(props.data.image)} 
+                            alt={props.data.name}
+                            style={loading === true ? {display: "none"} : {}}
+                            onLoad={() => {
+                                setLoading(false);
+                            }}
+                        />
+                    </div>
                     :
                     <video 
                         width="400" 

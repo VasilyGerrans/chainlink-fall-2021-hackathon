@@ -165,7 +165,7 @@ function CreateAuction(props) {
                         </Button>
                     </div>
                     : 
-                    <div className="convenience-container">
+                    <div style={{margin: "auto"}}>
                         <NFT 
                             style={{justifyContent: "left"}}
                             data={loadedNft}
