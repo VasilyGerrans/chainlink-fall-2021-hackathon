@@ -30,7 +30,7 @@ function Home(props) {
 
     return (
         <div>
-            <div style={{"textAlign": "left"}}>
+           {/*  <div style={{"textAlign": "left"}}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis facilisis sem. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed id dolor ex. Etiam sed augue sit amet nisl semper elementum nec non mauris. Nulla varius eu urna quis pretium. Quisque ut elit non nibh laoreet viverra. Morbi laoreet sodales urna, vitae iaculis eros. Praesent nulla lorem, varius nec mattis ut, efficitur et nisi. 
             </div>
             <div>
@@ -45,7 +45,7 @@ function Home(props) {
                 <p>
                 Morbi laoreet sodales urna, vitae iaculis eros. Praesent nulla lorem, varius nec mattis ut, efficitur et nisi. 
                 </p>
-            </div>
+            </div> */}
             <div>
                 <Link to="/create">
                     <Button 

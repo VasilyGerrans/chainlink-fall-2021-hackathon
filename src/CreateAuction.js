@@ -4,6 +4,7 @@ import { ToggleButtonGroup, ToggleButton, Button, Tooltip, Input, Box, Slider, C
 import { ButtonGroup } from "@mui/material"
 import Web3 from 'web3';
 import NFT from './components/NFT';
+import SearchNFTs from './components/SearchNFTs';
 
 function CreateAuction(props) {
     const timeOptions = Object.freeze(["hours", "days", "weeks"]);
@@ -77,7 +78,13 @@ function CreateAuction(props) {
                         <h2 style={{cursor: "pointer"}}>X</h2>
                     </Link>
                 </div>
-                <div style={{textAlign: "center", display: "flex", alignItems: "center"}}>
+                <div className="convenience-container" style={{textAlign: "center", display: "flex", alignItems: "center"}}>
+                    <SearchNFTs 
+                        wallet={props.wallet}
+                        Moralis={props.Moralis}
+                        retrieveNFT={props.retrieveNFT}
+                    />
+                    {/* 
                     {loading === true ? 
                     <div style={{margin: "auto"}}>
                         <CircularProgress />
@@ -164,7 +171,7 @@ function CreateAuction(props) {
                             Clear
                         </Button>
                     </div>
-                    }
+                    } */}
                 </div>
                 <br />            
                 <div className="convenience-container">

@@ -12,7 +12,6 @@ import ViewAuction from './ViewAuction';
 
 function App() {
   const { Moralis, isInitialized } = useMoralis();
-  const [ nfts, setNfts ] = useState([]);
   const [ validNetwork, setValidNetwork ] = useState(false);
   const [ wallet, setWallet ] = useState("");
 
@@ -52,31 +51,7 @@ function App() {
 
       window.ethereum?.on('accountsChanged', handleAccountsChanged);
     })();
-  }, []);
-
-  const pushNftResult = async newResult => {
-    try {
-      let response = await fetch(newResult.token_uri);
-      let json = await response.json();
-      let src = await fetch(fixNFTURL(json.image));
-      let arr = nfts;
-      arr.unshift(src);
-      arr.pop();
-      setNfts(src);
-      return src;
-    } catch (err) {
-      console.log(newResult);
-      let src = {
-        name: newResult.name ? newResult.name : "Failed to load name", 
-        description: newResult.description ? newResult.description : "", 
-        image: "#"
-      };
-      let arr = nfts;
-      arr.unshift(src);
-      arr.pop();
-      return src;
-    }
-  }
+  }, []);  
 
   const initWeb3 = async () => {
     const provider = await detectEthereumProvider();
@@ -171,11 +146,9 @@ function App() {
         <Route path="/create">
           <CreateAuction 
             wallet={wallet}
-            nfts={nfts}
-            history={history}
             Moralis={Moralis}
+            history={history}
             retrieveNFT={retrieveNFT}
-            pushNftResult={pushNftResult}
           />          
         </Route>
         <Route path="/auction/:id">
