@@ -16,5 +16,5 @@ ReactDOM.render(
     </BrowserRouter>
   </MoralisProvider>
   ,
-  document.getElementById('root')
+  document.getElementById('root'),
 );

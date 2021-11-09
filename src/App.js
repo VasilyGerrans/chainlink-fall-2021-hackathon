@@ -8,6 +8,7 @@ import CreateAuction from './CreateAuction';
 import { Button } from '@mui/material';
 import Home from './Home';
 import './App.css';
+import "nes.css/css/nes.min.css";
 import ViewAuction from './ViewAuction';
 
 function App() {
@@ -124,7 +125,7 @@ function App() {
       <div className="header">
         <div></div>
         <div style={{color: "red"}}>
-          Please connect to the <b>Kovan</b> network through MetaMask
+          Connect to the <b>Kovan</b> network through MetaMask
         </div>
         <div></div>
       </div>
@@ -157,9 +158,14 @@ function App() {
       <div>
         <h1>
           <Link to="/">
-            Meltdown!
+            <img class="logo" src="/logo500.png"></img>
           </Link>
         </h1>
+        <div class="navbar">
+          <Link to="/"><button type="button" class="nav-button">Home</button></Link>
+          <div class="divider"/>
+          <Link to="/create"><button type="button" class="nav-button">Create Auction</button></Link>
+        </div>
       </div>
       <Switch>
         <Route exact path="/">
