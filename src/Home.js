@@ -35,14 +35,14 @@ function Home(props) {
                     Featured Auction
                 </h1>
             </div>
-            <div style={{"textAlign": "left"}}>
+            <div>
                 <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis facilisis sem. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. 
                 </p>
                 <p>
                 Morbi laoreet sodales urna, vitae iaculis eros. Praesent nulla lorem, varius nec mattis ut, efficitur et nisi. 
                 </p>
-            </div> */}
+            </div>
             <div>
                 <h1 class="heading">Live auctions</h1>
                 <div style={{textAlign: "left"}}>
