@@ -8,6 +8,7 @@ function SearchNFTs(props) {
     const [ nftArray, setNftArray ] = useState([]);
     const [ nftTotal, setNftTotal ] = useState(0);
     const [ selected, setSelected ] = useState({});
+    const [ cacheNft, setCacheNft ] = useState({});
     const [ loading, setLoading ] = useState(true);
 
     const retrieveAllNfts = async () => {
@@ -51,6 +52,15 @@ function SearchNFTs(props) {
         }
 
         return nfts;
+    }
+
+    const retrieveSingleNft = async element => {
+        // console.log(element);
+        setLoading(true);
+        let meta = await props.retrieveNFT(element.token_address, element.token_id, "eth");
+        // console.log(meta);
+        setSelected(meta);
+        setLoading(false);
     }
 
     useEffect(() => {   
@@ -125,12 +135,14 @@ function SearchNFTs(props) {
                                         <Button
                                             key={element.token_address + "/" + element.token_id}   
                                             onClick={async () => {
-                                                console.log(element);
+                                                /* console.log(element);
                                                 setLoading(true);
                                                 let meta = await props.retrieveNFT(element.token_address, element.token_id, "eth");
                                                 console.log(meta);
                                                 setSelected(meta);
-                                                setLoading(false);
+                                                setLoading(false); */
+                                                setCacheNft(element);
+                                                await retrieveSingleNft(element);
                                             }}                         
                                         >
                                             {element.name}
@@ -146,7 +158,23 @@ function SearchNFTs(props) {
                         <NFT
                             data={selected}
                         />
-                        <div>
+                        <div style={{display: "flex", justifyContent: "space-evenly"}}>
+                            <Button
+                                onClick={() => {
+                                    setSelected({});
+                                }}
+                            >
+                                Clear
+                            </Button>
+                            <Button
+                                onClick={async () => {
+                                    setLoading(true);
+                                    setSelected({});
+                                    await retrieveSingleNft(cacheNft);
+                                }}
+                            >
+                                Reload                        
+                            </Button>
                         </div>
                     </div>
                 }
