@@ -30,12 +30,9 @@ function Home(props) {
 
     return (
         <div>
-           {/*  <div style={{"textAlign": "left"}}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis facilisis sem. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed id dolor ex. Etiam sed augue sit amet nisl semper elementum nec non mauris. Nulla varius eu urna quis pretium. Quisque ut elit non nibh laoreet viverra. Morbi laoreet sodales urna, vitae iaculis eros. Praesent nulla lorem, varius nec mattis ut, efficitur et nisi. 
-            </div>
             <div>
-                <h1 style={{textAlign: "right"}}>
-                What are candle auctions?
+                <h1 class="heading">
+                    Featured Auction
                 </h1>
             </div>
             <div style={{"textAlign": "left"}}>
@@ -47,24 +44,7 @@ function Home(props) {
                 </p>
             </div> */}
             <div>
-                <Link to="/create">
-                    <Button 
-                        variant="outlined" 
-                        color="primary" 
-                        size="large" 
-                        style={{fontFamily: "Inconsolata,monospace"}}
-                        disabled={false}
-                        style={{
-                            fontSize: "30px", 
-                            margin: "30px"
-                        }}
-                    >
-                        create an auction
-                    </Button>
-                </Link>
-            </div>
-            <div>
-                <h1 style={{textAlign: "left"}}>Live auctions</h1>
+                <h1 class="heading">Live auctions</h1>
                 <div style={{textAlign: "left"}}>
                     {loadedAuctions.map(auction => {
                         return (
