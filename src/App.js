@@ -34,12 +34,14 @@ function App() {
       token_id: token, 
       chain: chain
     });
-    if (meta.metadata !== undefined) {
-      return {...JSON.parse(meta.metadata), ...meta};
-    } else if (meta.text !== undefined) {
-      return {...JSON.parse(meta.text), ...meta};
-    } else if (meta.name !== undefined) {
-      return meta;
+    if (meta !== null) {
+      if (meta.metadata !== undefined) {
+        return {...JSON.parse(meta.metadata), ...meta};
+      } else if (meta.text !== undefined) {
+        return {...JSON.parse(meta.text), ...meta};
+      } else if (meta.name !== undefined) {
+        return meta;
+      }
     }
     return null;
   }

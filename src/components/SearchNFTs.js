@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Input, ButtonGroup, Button } from '@mui/material';
+import { Input, ButtonGroup, Button, CircularProgress } from '@mui/material';
 import Web3 from 'web3';
 import NFT from './NFT';
 
@@ -8,7 +8,7 @@ function SearchNFTs(props) {
     const [ nftArray, setNftArray ] = useState([]);
     const [ nftTotal, setNftTotal ] = useState(0);
     const [ selected, setSelected ] = useState({});
-    const [ loading, setLoading ] = useState(false);
+    const [ loading, setLoading ] = useState(true);
 
     const retrieveAllNfts = async () => {
         let nfts = await retrieveNfts(0);
@@ -23,11 +23,7 @@ function SearchNFTs(props) {
             address: "0x24422361687270c1ac2dd3f336e1bc130849617b",
             order: "name.ASC",
             offset: offset
-        });
-
-        if (nftTotal === 0) {
-            setNftTotal(response.total);
-        }
+        });        
 
         let nfts = response.result?.map(nft => {
             if (nft.metadata === null) {
@@ -50,8 +46,17 @@ function SearchNFTs(props) {
             }
         }).filter(element => element !== undefined && element !== null && element !== {});
 
+        if (nftTotal === 0) {
+            setNftTotal(response.total);
+        }
+
         return nfts;
     }
+
+    useEffect(() => {   
+        console.log(loading);
+        setLoading(true);     
+    }, [])
 
     useEffect(() => {
         if (nftTotal > 500) {
@@ -69,9 +74,16 @@ function SearchNFTs(props) {
         } 
     }, [nftTotal])
 
-    /* useEffect(() => {
+    useEffect(() => {
         console.log("NFT array", nftArray);
-    }, [nftArray]) */
+        if (nftArray.length > 0) {
+            setLoading(false);
+        }
+    }, [nftArray])
+
+    useEffect(() => {
+        console.log("changed to ", loading);
+    }, [loading]);
 
     useEffect(() => {
         if (Web3.utils.isAddress(props.wallet) && props.Moralis != undefined && nftArray.length === 0) {
@@ -82,50 +94,62 @@ function SearchNFTs(props) {
     }, [props.wallet, props.Moralis])
 
     return (
-        <div style={{width: "100%", height: "300px",overflow: "scroll"}}>
-            {selected.name === undefined ?
-            <div>
-                <Input
-                    style={{width: "100%"}}
-                    variant="standard"
-                    placeholder="Search..."
-                    value={search}
-                    type="text"
-                    onChange={e => {
-                        setSearch(e.target.value)
-                    }}
-                />
-                {nftArray.length === 0 ? 
-                <span></span>
-                :
-                <ButtonGroup
-                    orientation="vertical"
-                    variant="text"
-                    style={{width: "100%"}}
-                >
-                    {nftArray.filter(element => search === "" || element.name.toLowerCase().includes(search.toLowerCase())).map(element => {
-                        return (
-                            <Button
-                                key={element.token_address + "/" + element.token_id}   
-                                onClick={async () => {
-                                    console.log(element);
-                                    let meta = await props.retrieveNFT(element.token_address, element.token_id, "eth");
-                                    console.log(meta);
-                                    setSelected(meta);
-                                }}                         
-                            >
-                                {element.name}
-                            </Button>
-                        )                                                  
-                    })}
-                </ButtonGroup>
-                }
-            </div>
+        <div style={{margin: "auto", width: "100%"}}>
+            {loading === true ?
+            <CircularProgress />
             :
             <div>
-                <NFT
-                    data={selected}
-                />
+                {selected.name === undefined ?
+                    <div style={{width: "100%", height: "300px",overflow: "scroll"}}>
+                        <div>
+                            <Input
+                                style={{width: "100%"}}
+                                variant="standard"
+                                placeholder="Search..."
+                                value={search}
+                                type="text"
+                                onChange={e => {
+                                    setSearch(e.target.value)
+                                }}
+                            />
+                            {nftArray.length === 0 ? 
+                            <span></span>
+                            :
+                            <ButtonGroup
+                                orientation="vertical"
+                                variant="text"
+                                style={{width: "100%"}}
+                            >
+                                {nftArray.filter(element => search === "" || element.name.toLowerCase().includes(search.toLowerCase())).map(element => {
+                                    return (
+                                        <Button
+                                            key={element.token_address + "/" + element.token_id}   
+                                            onClick={async () => {
+                                                console.log(element);
+                                                setLoading(true);
+                                                let meta = await props.retrieveNFT(element.token_address, element.token_id, "eth");
+                                                console.log(meta);
+                                                setSelected(meta);
+                                                setLoading(false);
+                                            }}                         
+                                        >
+                                            {element.name}
+                                        </Button>
+                                    )                                                  
+                                })}
+                            </ButtonGroup>
+                            }
+                        </div>
+                    </div>
+                    :
+                    <div style={{width: "100%"}}>
+                        <NFT
+                            data={selected}
+                        />
+                        <div>
+                        </div>
+                    </div>
+                }
             </div>
             }
         </div>
