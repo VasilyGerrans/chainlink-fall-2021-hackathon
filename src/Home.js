@@ -42,7 +42,7 @@ function Home(props) {
                 <p>
                 Morbi laoreet sodales urna, vitae iaculis eros. Praesent nulla lorem, varius nec mattis ut, efficitur et nisi. 
                 </p>
-            </div>
+            </div> */}
             <div>
                 <h1 class="heading">Live auctions</h1>
                 <div style={{textAlign: "left"}}>
