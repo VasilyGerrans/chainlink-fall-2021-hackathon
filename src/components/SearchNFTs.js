@@ -55,16 +55,13 @@ function SearchNFTs(props) {
     }
 
     const retrieveSingleNft = async element => {
-        // console.log(element);
         setLoading(true);
         let meta = await props.retrieveNFT(element.token_address, element.token_id, "eth");
-        // console.log(meta);
         setSelected(meta);
         setLoading(false);
     }
 
     useEffect(() => {   
-        console.log(loading);
         setLoading(true);     
     }, [])
 
@@ -85,15 +82,10 @@ function SearchNFTs(props) {
     }, [nftTotal])
 
     useEffect(() => {
-        console.log("NFT array", nftArray);
         if (nftArray.length > 0) {
             setLoading(false);
         }
     }, [nftArray])
-
-    useEffect(() => {
-        console.log("changed to ", loading);
-    }, [loading]);
 
     useEffect(() => {
         if (Web3.utils.isAddress(props.wallet) && props.Moralis != undefined && nftArray.length === 0) {
@@ -134,13 +126,7 @@ function SearchNFTs(props) {
                                     return (
                                         <Button
                                             key={element.token_address + "/" + element.token_id}   
-                                            onClick={async () => {
-                                                /* console.log(element);
-                                                setLoading(true);
-                                                let meta = await props.retrieveNFT(element.token_address, element.token_id, "eth");
-                                                console.log(meta);
-                                                setSelected(meta);
-                                                setLoading(false); */
+                                            onClick={async () => {                     
                                                 setCacheNft(element);
                                                 await retrieveSingleNft(element);
                                             }}                         
