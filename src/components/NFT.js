@@ -24,13 +24,13 @@ function NFT(props) {
             <div>
                 <div>
                     {props.data.animation_url == null ?
-                    <div style={{width: "400px", minHeight: "300px", margin: "auto"}}>
+                    <div style={{margin: "auto"}}>
                         <CircularProgress 
-                            style={loading === false ? {display: "none"} : {marginTop: "100px"}}
-                            width="400"
+                            style={loading === false ? {display: "none"} : {}}
+                            width="100%"
                         />
                         <img 
-                            width="400" 
+                            width="100%" 
                             src={fixUrl(props.data.image)} 
                             alt={props.data.name}
                             style={loading === true ? {display: "none"} : {}}
@@ -41,7 +41,7 @@ function NFT(props) {
                     </div>
                     :
                     <video 
-                        width="400" 
+                        width="100%" 
                         src={fixUrl(props.data.animation_url)} 
                         controls 
                         poster={fixUrl(props.data.image)} 
@@ -49,9 +49,13 @@ function NFT(props) {
                     >
                     </video>
                     }
-                    <h4 style={{margin: "auto"}}>{props.data.name}</h4>
+                    <h2 class="heading">{props.data.name}</h2>
                     <p>{props.data.description}</p>
-                    <p><a target="_blank" rel="noreferrer" href={'https://opensea.io/assets/' + props.data.token_address + '/' + props.data.token_id}>View on OpenSea</a></p>
+                    <button class="ops-button">
+                        <a style={{textDecoration: 'none', color: 'white'}} target="_blank" rel="noreferrer" href={'https://opensea.io/assets/' + props.data.token_address + '/' + props.data.token_id}>
+                           OpenSea
+                        </a>
+                    </button>
                 </div>
             </div>
         </div>
