@@ -2,7 +2,6 @@ import React from 'react';
 import Chart from "react-apexcharts";
 import { ellipsisAddress } from '../utilities';
 
-
 function AuctionChart() {
     return (        
         <div>
