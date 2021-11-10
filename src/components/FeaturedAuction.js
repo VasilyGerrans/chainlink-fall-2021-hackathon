@@ -27,20 +27,20 @@ function FeaturedAuction(props) {
     return (
         <div className="FeaturedAuction">
             <Grid container>
-                <Grid item xs={4}>
+                <Grid item md={4}>
                     <img 
                         src={fixUrl(props.data.image)} 
                         alt={props.data.name}
-                        style={loading === true ? {width: "100%", display: "none"} : {maxWidth: "100%"}}
+                        style={loading === true ? {width: "100%", display: "none"} : {width: "100%"}}
                         onLoad={() => {
                             setLoading(false);
                         }}
                     />
                 </Grid>
-                <Grid item xs={8}>
+                <Grid item md={8}>
                         <AuctionChart />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item md={12}>
                 <div class="nes-container with-title">
                     <p class="title">{props.data.name}</p>
                     <p>{props.data.description}</p>
