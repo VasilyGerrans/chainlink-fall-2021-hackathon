@@ -52,47 +52,57 @@ function ViewAuction(props) {
                 </Link>
             </div>
             :
-            <div style={{display: "flex", justifyContent: "left"}}>
+            <div>
+                <Grid container spacing={2}>
+                    <Grid container item>
+                        <Grid item md={4}>
                 <NFT
                     data={loadedNft}
-                    style={{margin: "0px auto", width: "500px"}}
                 />
-                <div style={{width: "100%", textAlign: "left", margin: "0 30px"}}>
-                    <div>
-                        {/* <div>
-                            0x187e11BFcD3998150487444dA5B736F1DF133154
+                        </Grid>
+                        <Grid item md={8}>
+                            <AuctionChart />
+                        </Grid>
+                    </Grid>
+                    <Grid item md={12}>
+                        <div class="nes-container bidButtons">
+                            <button class="bid-button">Add to bid</button>
+                            <div class="divider"/>
+                            <button class="bid-button">Withdraw</button>
                         </div>
+                    </Grid>
+                    <Grid item md={12}>
+                        <div class="nes-container">
                         <div>
-                            0.1 ETH
-                        </div> */}
+                                <h2>Auction Information</h2>
+                                <div>
+                                    Current block: {current}<br/>
+                                    Remaining blocks: {bidding + closing - current}<br/>
+                                    Approx time remaining: {humanizeDuration((bidding + closing - current)*13000)}
                     </div> 
-                    <div>
-                        <AuctionChart />
                     </div>
                     <div>
-                        <h1 style={{margin: "0"}}>Top bidders:</h1>
+                                <h2>Top bidders</h2>
                         <ol>
                             <li>
-                                <h2>
-                                    {ellipsisAddress("0x187e11BFcD3998150487444dA5B736F1DF133154", 4)}, 4 WETH, block 4000
-                                </h2>
+                                        <b>{ellipsisAddress("0x187e11BFcD3998150487444dA5B736F1DF133154", 4)}, 4 ETH, block 4000</b>
                             </li>
                             <li>
-                                {ellipsisAddress("0x187e11BFcD3998150487444dA5B736F1DF133154", 4)}, 3 WETH, block 3000
+                                        {ellipsisAddress("0x187e11BFcD3998150487444dA5B736F1DF133154", 4)}, 3 ETH, block 3000
                             </li>
                             <li>
                                 {ellipsisAddress("0xffA1c53b18d864A6340adA628BdFF6651fa4E097", 4)}, 2 WETH, block 200
                             </li>
                         </ol>
+                            </div>
+                        </div>
+                    </Grid>
+                </Grid>
+                <div>
+                    <div>
                     </div>
                     <br />
                     <div style={{display: "flex", justifyContent: "space-between"}}>
-                        <div style={{textAlign: "center"}}>
-                            Current block: <h2>{current}</h2>
-                        </div>
-                        <div style={{textAlign: "center"}}>
-                            Remaining blocks: <h2>{bidding + closing - current}</h2>
-                        </div>                        
                     </div>
                     {/* <div style={{margin: "30px auto"}}>
                         <AuctionBar
