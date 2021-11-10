@@ -2,7 +2,8 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
 import { useEffect, useState } from 'react';
 import { useMoralis } from 'react-moralis';
-import { Switch, Route, useHistory, Link } from 'react-router-dom';
+import { Switch, Route, useHistory} from 'react-router-dom';
+import { HashLink as Link} from 'react-router-hash-link';
 import { ellipsisAddress, fixNFTURL } from './utilities';
 import CreateAuction from './CreateAuction';
 import { Button } from '@mui/material';
@@ -15,6 +16,7 @@ function App() {
   const { Moralis, isInitialized } = useMoralis();
   const [ validNetwork, setValidNetwork ] = useState(false);
   const [ wallet, setWallet ] = useState("");
+  const [ featuredNft, setFeaturedNft ] = useState({});
 
   const history = useHistory();
 
@@ -46,10 +48,19 @@ function App() {
     }
     return null;
   }
+  const getFeaturedAuction = async() => {
+      let meta = await retrieveNFT("0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270", 78000313, "eth");
+      console.log(meta);
+      // Show it as an image
+      meta.animation_url = null;
+      setFeaturedNft(meta);
+  }
   
   useEffect(() => {
     (async () => {
       await initWeb3();
+      getFeaturedAuction();
+
       await connect();
 
       window.ethereum?.on('accountsChanged', handleAccountsChanged);
@@ -141,7 +152,11 @@ function App() {
         <div class="navbar">
           <Link to="/"><button type="button" class="nav-button">Home</button></Link>
           <div class="divider"/>
+          <a href="https://nftmelt.org"><button type="button" class="nav-button">About</button></a>
+          <div class="divider"/>
           <Link to="/create"><button type="button" class="nav-button">Create Auction</button></Link>
+          <div class="divider"/>
+          <Link to="/#liveAuctions"><button type="button" class="nav-button">Live Auctions</button></Link>
         </div>
       </div>
       <Switch>
@@ -149,7 +164,7 @@ function App() {
           <Home
             Moralis={Moralis}
             isInitialized={isInitialized}
-            retrieveNFT={retrieveNFT}
+            featuredNft={featuredNft}
           />          
         </Route>
         <Route path="/create">
