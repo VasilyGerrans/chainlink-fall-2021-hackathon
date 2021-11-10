@@ -154,6 +154,40 @@ a {
   height:auto;
   display:inline-block;
 }
+.ops-button {
+  background-color: #4971f5;
+  color: white;
+  border-style: 'solid';
+  border-color: #333333;
+  box-shadow: #333333 1px 1px 0,
+                #333333 2px 2px 0,
+                #333333 3px 3px 0
+}
+.ops-button:hover {
+  background-color: #274bc2;
+  color: white;
+}
+
+.bidButtons {
+  display: flex;
+  justify-content: center;
+}
+
+.bid-button {
+  background-color: #4971f5;
+  color: white;
+  border-style: 'solid';
+  border-color: #333333;
+  box-shadow: #333333 1px 1px 0,
+                #333333 2px 2px 0,
+                #333333 3px 3px 0
+}
+.bid-button:focus{
+  outline: none;
+}
+.bid-button:hover {
+  background-color: #274bc2;
+}
 
 .nav-button {
   background-color: #ff6700;
