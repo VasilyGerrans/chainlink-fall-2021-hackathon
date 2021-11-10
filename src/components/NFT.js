@@ -50,7 +50,6 @@ function NFT(props) {
                     </video>
                     }
                     <h4 style={{margin: "auto"}}>{props.data.name}</h4>
-                    <h4 style={{margin: "auto"}}>Amount in existence: {props.data.amount}</h4>
                     <p>{props.data.description}</p>
                     <p><a target="_blank" rel="noreferrer" href={'https://opensea.io/assets/' + props.data.token_address + '/' + props.data.token_id}>View on OpenSea</a></p>
                 </div>
