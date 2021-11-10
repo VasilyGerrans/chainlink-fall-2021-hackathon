@@ -191,22 +191,8 @@ function CreateAuction(props) {
                                 }
                             }}
                         />
-                    </Tooltip>
-                    </div>
-                    <div>
-                    <ToggleButtonGroup
-                        exclusive
-                        value={alignment}
-                        onChange={(event, newAlignment) => {
-                            if (newAlignment !== null) {
-                                setAlignment(newAlignment);
-                            }
-                        }}
-                    >
-                        <ToggleButton size="medium" value="eth">WETH</ToggleButton>
-                        <ToggleButton size="medium" value="usdc">USDC</ToggleButton>
-                    </ToggleButtonGroup>
-                    </div>
+                    </Tooltip><b>ETH</b>
+                    </div> 
                 </div>
                 </div>
                 <div className="convenience-container">
