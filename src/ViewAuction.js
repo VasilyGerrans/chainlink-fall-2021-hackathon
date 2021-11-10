@@ -6,6 +6,8 @@ import { ellipsisAddress } from './utilities';
 import AuctionChart from './components/AuctionChart';
 import humanizeDuration from 'humanize-duration';
 import { Grid } from '@mui/material';
+import { Popup } from 'reactjs-popup';
+
 
 function ViewAuction(props) {
     const { id } = useParams();
@@ -66,9 +68,32 @@ function ViewAuction(props) {
                             <AuctionChart />
                         </Grid>
                     </Grid>
+
                     <Grid item md={12}>
                         <div class="nes-container bidButtons">
-                            <button class="bid-button">Add to bid</button>
+                            <Popup
+                                trigger={<button class="bid-button">Add to bid</button>}
+                                modal
+                                className="popup-content"
+                            >
+                                {close => (
+                                <div className="modal">
+                                    <button className="close" onClick={close}>
+                                    &times;
+                                    </button>
+                                    <div className="header">Confirm bid</div>
+                                    <div className="content">
+                                        <p>Your curent bid is: __ ETH</p>
+                                        <p>The highest bid is __ ETH (you) </p>
+                                        <input class="bid-input" placeholder="1"></input> ETH
+                                    </div>
+                                    <div className="actions">
+                                    <button class="bid-button"> Update bid </button>
+                                    <div class="divider"/>
+                                    </div>
+                                </div>
+                                )}
+                            </Popup>
                             <div class="divider"/>
                             <button class="bid-button">Withdraw</button>
                         </div>
