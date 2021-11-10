@@ -9,13 +9,14 @@ function AuctionChart() {
                 type="line"
                 options={{
                     xaxis: {
-                        categories: [100000000, 100000001, 100000003, 100000004, 100000005]
+                        categories: [100000000, 100000001, 100000003, 100000004, 100000005, 100000006],
+                        show: true
                     },
                     stroke: {
                         curve: "stepline"
                     },
                     title: {
-                        text: "Top bids",
+                        text: "Bids",
                         align: "left"
                     },   
                     chart: {
