@@ -4,6 +4,8 @@ import { Link, useParams } from 'react-router-dom';
 import NFT from './components/NFT';
 import { ellipsisAddress } from './utilities';
 import AuctionChart from './components/AuctionChart';
+import humanizeDuration from 'humanize-duration';
+import { Grid } from '@mui/material';
 
 function ViewAuction(props) {
     const { id } = useParams();
@@ -56,9 +58,9 @@ function ViewAuction(props) {
                 <Grid container spacing={2}>
                     <Grid container item>
                         <Grid item md={4}>
-                <NFT
-                    data={loadedNft}
-                />
+                            <NFT
+                                data={loadedNft}
+                            />
                         </Grid>
                         <Grid item md={8}>
                             <AuctionChart />
@@ -73,27 +75,27 @@ function ViewAuction(props) {
                     </Grid>
                     <Grid item md={12}>
                         <div class="nes-container">
-                        <div>
+                            <div>
                                 <h2>Auction Information</h2>
                                 <div>
                                     Current block: {current}<br/>
                                     Remaining blocks: {bidding + closing - current}<br/>
                                     Approx time remaining: {humanizeDuration((bidding + closing - current)*13000)}
-                    </div> 
-                    </div>
-                    <div>
+                                </div>                        
+                            </div>
+                            <div>
                                 <h2>Top bidders</h2>
-                        <ol>
-                            <li>
+                                <ol>
+                                    <li>
                                         <b>{ellipsisAddress("0x187e11BFcD3998150487444dA5B736F1DF133154", 4)}, 4 ETH, block 4000</b>
-                            </li>
-                            <li>
+                                    </li>
+                                    <li>
                                         {ellipsisAddress("0x187e11BFcD3998150487444dA5B736F1DF133154", 4)}, 3 ETH, block 3000
-                            </li>
-                            <li>
-                                {ellipsisAddress("0xffA1c53b18d864A6340adA628BdFF6651fa4E097", 4)}, 2 WETH, block 200
-                            </li>
-                        </ol>
+                                    </li>
+                                    <li>
+                                        {ellipsisAddress("0xffA1c53b18d864A6340adA628BdFF6651fa4E097", 4)}, 2 WETH, block 200
+                                    </li>
+                                </ol>
                             </div>
                         </div>
                     </Grid>
@@ -115,21 +117,6 @@ function ViewAuction(props) {
                         placement="top"
                     > */}
                     {/* </Tooltip> */}
-                    <div style={{display: "flex", justifyContent: "center"}}>
-                        <Button
-                            variant="outlined" 
-                            color="primary" 
-                            size="large" 
-                            style={{fontFamily: "Inconsolata,monospace"}}
-                            disabled={false}
-                            style={{
-                                fontSize: "20px", 
-                                margin: "30px"
-                            }}
-                        >
-                            bid
-                        </Button>
-                    </div>
                 </div>
             </div>
             }
