@@ -150,13 +150,13 @@ function App() {
           </h1>
         </Link>
         <div class="navbar">
-          <Link to="/"><button type="button" class="nav-button">Home</button></Link>
+          <Link to="/"><button class="nav-button">Home</button></Link>
           <div class="divider"/>
-          <a href="https://nftmelt.org"><button type="button" class="nav-button">About</button></a>
+          <a target="_blank" href="https://nftmelt.org"><button class="nav-button">About</button></a>
           <div class="divider"/>
-          <Link to="/create"><button type="button" class="nav-button">Create Auction</button></Link>
+          <Link to="/create"><button class="nav-button">Create Auction</button></Link>
           <div class="divider"/>
-          <Link to="/#liveAuctions"><button type="button" class="nav-button">Live Auctions</button></Link>
+          <Link to="/#liveAuctions"><button class="nav-button">Live Auctions</button></Link>
         </div>
       </div>
       <Switch>
