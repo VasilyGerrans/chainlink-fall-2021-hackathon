@@ -2,6 +2,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import MiniViewAuction from './components/MiniViewAuction';
+import FeaturedAuction from './components/FeaturedAuction';
 
 const LazyMiniAuction = React.lazy(() => import('./components/MiniViewAuction'));
 
@@ -35,16 +36,13 @@ function Home(props) {
                     Featured Auction
                 </h1>
             </div>
-            <div>
-                <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quis facilisis sem. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. 
-                </p>
-                <p>
-                Morbi laoreet sodales urna, vitae iaculis eros. Praesent nulla lorem, varius nec mattis ut, efficitur et nisi. 
-                </p>
+            <div style={{display: "inline-block"}}>
+                <FeaturedAuction
+                    data={props.featuredNft}
+                />
             </div>
             <div>
-                <h1 class="heading">Live auctions</h1>
+                <h1 class="heading" id='liveAuctions'>Live auctions</h1>
                 <div style={{textAlign: "left"}}>
                     {loadedAuctions.map(auction => {
                         return (
