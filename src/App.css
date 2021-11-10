@@ -75,7 +75,7 @@
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .nes-btn {
@@ -93,6 +93,10 @@
 
 .heading {
   font-family: 'Meltdown';
+}
+.title {
+  font-family: 'Meltdown';
+  font-size: 30px;
 }
 
 body {
@@ -114,7 +118,6 @@ code {
 }
 
 .header > div {
-  margin: 30px;
   align-content: center;
 }
 
@@ -122,8 +125,11 @@ code {
   justify-content: left !important;
 }
 
-.MuiButtonBase-root, input, div, p, text, span {
+.MuiButtonBase-root, input, div, text, span {
   font-family: "JetBrains Mono", monospace;
+}
+p {
+  font-size: 14px;
 }
 
 .convenience-container {
@@ -192,11 +198,14 @@ a {
 .nav-button {
   background-color: #ff6700;
   color: white;
+  border-style: 'solid';
   border-color: #333333;
-  box-shadow: hsl(24, 100%, 100%) 1px 1px 0,
+  box-shadow: #333333 1px 1px 0,
                 #333333 2px 2px 0,
-                #333333 3px 3px 0,
-                #333333 4px 4px 0
+                #333333 3px 3px 0
+}
+.nav-button:focus{
+  outline: none;
 }
 .nav-button:hover {
   background-color: #CC5200;
