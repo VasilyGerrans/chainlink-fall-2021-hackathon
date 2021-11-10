@@ -9,6 +9,7 @@ import CreateAuction from './CreateAuction';
 import { Button } from '@mui/material';
 import Home from './Home';
 import "nes.css/css/nes.min.css";
+import 'reactjs-popup/dist/index.css';
 import './App.css';
 import ViewAuction from './ViewAuction';
 

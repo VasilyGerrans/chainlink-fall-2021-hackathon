@@ -36,6 +36,14 @@
   margin-bottom: 20px;
 }
 
+.bid-input {
+  border-color: #333333;
+  box-shadow: #333333 1px 1px 0,
+                #333333 2px 2px 0,
+                #333333 3px 3px 0;
+  margin-bottom: 20px;
+}
+
 .tlogo:hover {
   animation: 0.5s sta ease-out both;
 }
@@ -178,9 +186,16 @@ a {
   display: flex;
   justify-content: center;
 }
+.popup-content {
+  width: 50%;
+  padding: 10px;
+  border-color: black;
+  border-width: 3px;
+}
 
 .bid-button {
   background-color: #4971f5;
+
   color: white;
   border-style: 'solid';
   border-color: #333333;
