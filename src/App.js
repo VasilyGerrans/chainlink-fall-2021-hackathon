@@ -133,11 +133,11 @@ function App() {
       </div>
       }
       <div>
-        <h1>
-          <Link to="/">
-            <img class="logo" src="/logo500.png"></img>
-          </Link>
-        </h1>
+        <Link to="/" style={{textDecoration: 'none'}}>
+          <h1 class="tlogo">
+            meltdown
+          </h1>
+        </Link>
         <div class="navbar">
           <Link to="/"><button type="button" class="nav-button">Home</button></Link>
           <div class="divider"/>
@@ -149,6 +149,7 @@ function App() {
           <Home
             Moralis={Moralis}
             isInitialized={isInitialized}
+            retrieveNFT={retrieveNFT}
           />          
         </Route>
         <Route path="/create">
