@@ -8,8 +8,8 @@ import { ellipsisAddress, fixNFTURL } from './utilities';
 import CreateAuction from './CreateAuction';
 import { Button } from '@mui/material';
 import Home from './Home';
-import './App.css';
 import "nes.css/css/nes.min.css";
+import './App.css';
 import ViewAuction from './ViewAuction';
 
 function App() {
