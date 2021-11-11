@@ -106,6 +106,9 @@
   font-family: 'Meltdown';
   font-size: 30px;
 }
+.nes-container {
+  width: 900px;
+}
 
 body {
   margin: 0;
