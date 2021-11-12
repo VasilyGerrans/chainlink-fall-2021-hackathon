@@ -292,6 +292,7 @@ function CreateAuction(props) {
                 }
                 <div style={{margin: "20px", textAlign: "center"}}>
                 <ButtonGroup size="medium" aria-label="small button group">
+		<button class="ops-button">Approve NFT</button>
                 <Button 
                         onClick={sendNFTApprove}
                     disabled={!(startingBid !== "" && Number(startingBid) > 0 &&
