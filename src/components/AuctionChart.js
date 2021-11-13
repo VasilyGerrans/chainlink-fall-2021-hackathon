@@ -32,7 +32,9 @@ function AuctionChart(props) {
         var web3 = new Web3('https://kovan.infura.io/v3/416304afa6a24e61934cad318b64884c');
         let currentBlock = await web3.eth.getBlockNumber();
 
-        catArray.push(currentBlock);
+        if (catArray.includes(currentBlock) === false) {
+            catArray.push(currentBlock);
+        }
         
         setCategories(catArray);
 
@@ -67,18 +69,20 @@ function AuctionChart(props) {
         
         let seriesArr = bidders.map(bidder => {
             let data = [];
-            for (var i = 0; i < result.length; i++) {
+            for (var i = 0; i < catArray.length; i++) {
                 if (i === 0) {
                     if (result[i].attributes.bidder === bidder) {
                         data.push(Number(result[i].attributes.amount));
                     } else {
                         data.push(0);
                     }
+                } else if (i === catArray.length - 1) {
+                    data.push(data[i - 1]);
                 } else {
                     if (result[i].attributes.bidder === bidder) {
                         data.push(Number(result[i].attributes.amount) + data[i-1]);
                     } else {
-                        data.push(data[i-1]);
+                        data.push(data[i - 1]);
                     }
                 }
             }
