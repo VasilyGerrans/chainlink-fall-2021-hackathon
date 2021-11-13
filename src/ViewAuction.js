@@ -82,10 +82,12 @@ function ViewAuction(props) {
                             >
                                 {close => (
                                 <div className="modal">
-                                    <button className="close" onClick={close}>
-                                    &times;
-                                    </button>
-                                    <div className="header">Confirm bid</div>
+                                    <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                                        <div className="header">Confirm bid</div>
+                                        <button className="close" onClick={close}>
+                                        &times;
+                                        </button>
+                                    </div>
                                     <div className="content">
                                         <p>Your curent bid is: __ ETH</p>
                                         <p>The highest bid is __ ETH (you) </p>

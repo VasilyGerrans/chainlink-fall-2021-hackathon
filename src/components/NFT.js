@@ -23,7 +23,7 @@ function NFT(props) {
         <div className="NFT">
             <div>
                 <div>
-                    {props.data.animation_url == null ?
+                    {props.data == null || props.data.animation_url == null ?
                     <div style={{margin: "auto"}}>
                         <CircularProgress 
                             style={loading === false ? {display: "none"} : {}}
