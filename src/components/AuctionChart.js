@@ -1,15 +1,103 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Chart from "react-apexcharts";
 import { ellipsisAddress } from '../utilities';
+import Web3 from 'web3';
 
-function AuctionChart() {
+function AuctionChart(props) {
+    const [ series, setSeries ] = useState([]);
+    const [ categories, setCategories ] = useState([]);
+
+    useEffect(() => {
+        if (props.isInitialized === true &&
+            props.Moralis !== undefined && 
+            props.Moralis !== null && 
+            props.auctionId >= 0) {
+            (async () => {
+                await getBidSeries();
+            })();
+        }
+    }, [props.Moralis, props.auctionId, props.isInitialized]);
+
+    const getBidSeries = async () => {
+        const query = new props.Moralis.Query("BidIncreased");
+        query.equalTo("auctionId", props.auctionId.toString());
+        const result = await query.find();
+
+        let catArray = [];
+        for (var i = 0; i < result.length; i++) {
+            catArray.push(result[i].attributes.block_number);
+        }
+
+        // can be moved further up the hierarchy later
+        var web3 = new Web3('https://kovan.infura.io/v3/416304afa6a24e61934cad318b64884c');
+        let currentBlock = await web3.eth.getBlockNumber();
+
+        catArray.push(currentBlock);
+        
+        setCategories(catArray);
+
+        // fetch unique bidders
+        let bidders = [];
+        for (let element of result) {
+            let bidder = element.attributes.bidder;
+            if (bidders.indexOf(bidder) === -1) {
+                bidders.push(bidder);
+            }
+        }
+
+        // pretty sure this should always give us the correct 
+        // top five bidders
+        if (bidders.length > 5) {
+            // find top 5
+            let topBidders = [];
+            for (var i = 0; i < bidders.length; i++) {
+                let bidderTotal = 0;
+                for (var j = 0; j < result.length; j++) {
+                    if (result[j].attributes.bidder === bidders[i]) {
+                        bidderTotal += Number(result[j].attributes.amount);
+                    }
+                }
+                topBidders.push({bidder: bidders[i], total: bidderTotal});
+            }
+
+            topBidders.sort((a, b) => b.total - a.total);
+            topBidders.slice(0, 5);
+            bidders = topBidders.map(bidderObj => bidderObj.bidder);
+        }
+        
+        let seriesArr = bidders.map(bidder => {
+            let data = [];
+            for (var i = 0; i < result.length; i++) {
+                if (i === 0) {
+                    if (result[i].attributes.bidder === bidder) {
+                        data.push(Number(result[i].attributes.amount));
+                    } else {
+                        data.push(0);
+                    }
+                } else {
+                    if (result[i].attributes.bidder === bidder) {
+                        data.push(Number(result[i].attributes.amount) + data[i-1]);
+                    } else {
+                        data.push(data[i-1]);
+                    }
+                }
+            }
+            return {
+                name: ellipsisAddress(bidder, 4),
+                data
+            }
+        });
+
+        setSeries(seriesArr);
+    }
+
     return (        
         <div>
             <Chart
                 type="line"
                 options={{
                     xaxis: {
-                        categories: [100000000, 100000001, 100000003, 100000004, 100000005, 100000006],
+                        categories: categories,
                         show: true
                     },
                     stroke: {
@@ -27,20 +115,7 @@ function AuctionChart() {
                         }
                     }                 
                 }}                
-                series={[
-                    {
-                        name: ellipsisAddress("0xffA1c53b18d864A6340adA628BdFF6651fa4E097", 4),
-                        data: [0.04, 0.05, 0.06, 0.061, 0.0611]
-                    },
-                    {
-                        name: ellipsisAddress("0x63c84D89660588beA3918f626537D7989897caeF", 4),
-                        data: [0, 0, 0.0605, 0.0605, 0.07],
-                    },
-                    {
-                        name: ellipsisAddress("0x187e11BFcD3998150487444dA5B736F1DF133154", 4),
-                        data: [0, 0.04, 0.05, 0.07, 0.07]
-                    }
-                ]}
+                series={series}
             />
         </div>
     )

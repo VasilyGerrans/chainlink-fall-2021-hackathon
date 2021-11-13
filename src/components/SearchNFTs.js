@@ -57,7 +57,9 @@ function SearchNFTs(props) {
     const retrieveSingleNft = async element => {
         setLoading(true);
         let meta = await props.retrieveNFT(element.token_address, element.token_id, "eth");
-        setSelected(meta);
+        if (meta !== null && meta !== undefined) {
+            setSelected(meta);
+        }
         setLoading(false);
     }
 

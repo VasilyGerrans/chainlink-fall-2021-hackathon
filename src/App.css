@@ -137,7 +137,7 @@ code {
 }
 
 .MuiButtonBase-root, input, div, text, span {
-  font-family: "JetBrains Mono", monospace;
+  font-family: "JetBrains Mono", monospace !important;
 }
 p {
   font-size: 14px;
