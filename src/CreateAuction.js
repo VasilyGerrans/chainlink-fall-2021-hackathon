@@ -6,6 +6,9 @@ import Web3 from 'web3';
 import NFT from './components/NFT';
 import SearchNFTs from './components/SearchNFTs';
 
+import candleABI from './abi/Candle.json';
+import ierc721ABI from './abi/IERC721.json';
+
 function CreateAuction(props) {
     const timeOptions = Object.freeze(["hours", "days", "weeks"]);
     
