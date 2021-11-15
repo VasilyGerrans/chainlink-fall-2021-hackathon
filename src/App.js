@@ -22,7 +22,6 @@ function App() {
   const [ web3, setWeb3 ] = useState();
 
   const history = useHistory();
-
   const networkId = 42;
 
   const handleAccountsChanged = accounts => {
@@ -73,7 +72,7 @@ function App() {
   const initWeb3 = async () => {
     const provider = await detectEthereumProvider();
     console.log(provider);
-    const web3 = new Web3("https://kovan.infura.io/v3/416304afa6a24e61934cad318b64884c");
+    const web3 = await Moralis.enableWeb3();
 
     if (web3 != undefined) {
       await web3.eth.net.getId()
@@ -170,7 +169,6 @@ function App() {
             Moralis={Moralis}
             isInitialized={isInitialized}
             featuredNft={featuredNft}
-            web3={web3}
           />          
         </Route>
         <Route path="/create">
@@ -179,6 +177,7 @@ function App() {
             Moralis={Moralis}
             history={history}
             retrieveNFT={retrieveNFT}
+            web3={web3}
           />          
         </Route>
         <Route path="/auction/:id">
