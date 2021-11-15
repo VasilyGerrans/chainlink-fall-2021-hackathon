@@ -61,8 +61,11 @@ function SearchNFTs(props) {
         let meta = await props.retrieveNFT(element.token_address, element.token_id, "kovan");
         if (meta !== null && meta !== undefined) {
             setSelected(meta);
+        } else {
+            meta = null;
         }
         setLoading(false);
+        return meta;
     }
 
     useEffect(() => {   
@@ -132,7 +135,11 @@ function SearchNFTs(props) {
                                             key={element.token_address + "/" + element.token_id}   
                                             onClick={async () => {                     
                                                 setCacheNft(element);
-                                                await retrieveSingleNft(element);
+                                                let nft = await retrieveSingleNft(element);
+                                                if (nft !== null) {
+                                                    console.log(nft);
+                                                    props.setLoadedNft(nft);
+                                                }
                                             }}                         
                                         >
                                             {element.name} {element.token_id}
@@ -160,7 +167,10 @@ function SearchNFTs(props) {
                                 onClick={async () => {
                                     setLoading(true);
                                     setSelected({});
-                                    await retrieveSingleNft(cacheNft);
+                                    const nft = await retrieveSingleNft(cacheNft);
+                                    if (nft !== null) {
+                                        props.setLoadedNft(nft);
+                                    }
                                 }}
                             >
                                 Reload                        
