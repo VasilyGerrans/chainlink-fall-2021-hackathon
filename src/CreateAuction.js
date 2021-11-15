@@ -26,7 +26,6 @@ function CreateAuction(props) {
     const [ tkErr, setTkErr] = useState(false);
     const [ loadedNft, setLoadedNft ] = useState({});
     const [ hasApproved, setHasApproved ] = useState(false);
-    const [ candleContract, setCandleContract ] = useState();
     const [ nftContract, setnftContract ] = useState();
 
     const CONTRACT_ADDR = "0xaDbe2339225C83DAfE0621c26f413da6dA879EC1";
@@ -72,10 +71,6 @@ function CreateAuction(props) {
     useEffect(() => {
         console.log('reset to', loadedNft);
         console.log(candleABI);
-        if(props.web3 !== undefined && props.web3 !== null){
-            const c = new props.web3.eth.Contract(candleABI,CONTRACT_ADDR )
-            setCandleContract(c);
-        }
     }, [loadedNft]);
     
     const blocksFromTime = () => {

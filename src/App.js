@@ -19,7 +19,6 @@ function App() {
   const [ wallet, setWallet ] = useState("");
   const [ featuredNft, setFeaturedNft ] = useState({});
   const [ web3, setWeb3 ] = useState();
-
   const history = useHistory();
   const networkId = 42;
 
@@ -61,7 +60,6 @@ function App() {
     (async () => {
       await initWeb3();
       getFeaturedAuction();
-
       await connect();
 
       window.ethereum?.on('accountsChanged', handleAccountsChanged);
