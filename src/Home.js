@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@mui/material';
 import MiniViewAuction from './components/MiniViewAuction';
 import FeaturedAuction from './components/FeaturedAuction';
+import {fixNFTURL} from './utilities'
 
 const LazyMiniAuction = React.lazy(() => import('./components/MiniViewAuction'));
 
@@ -16,9 +17,9 @@ function Home(props) {
     const [ loadedAuctions, setLoadedAuctions ] = useState([]);
 
     const getDisplayAuctions = async () => {
-        const query = new props.Moralis.Query("auctions");
-        const result = await query.find();
-        setLoadedAuctions(result);
+        let data = await props.Moralis.Cloud.run("getLiveAuctions")
+        console.log(data)
+        setLoadedAuctions(data);
     }
 
     useEffect(() => {
@@ -48,12 +49,13 @@ function Home(props) {
                 <h1 className="heading" id='liveAuctions'>Live auctions</h1>
                 <div style={{textAlign: "left"}}>
                     {loadedAuctions.map(auction => {
+                        console.log(auction)
                         return (
                             <DisplayMiniAuction
                                 key={auction.id}
                                 id={auction.id}
-                                image={auction.attributes.src}
-                                closingPercentage={auction.attributes.closing_percentage}
+                                image={fixNFTURL(auction.meta.image)}
+                                closingPercentage={10}
                                 progressPercentage={Math.floor(Math.random() * 100)}
                             />
                         )
