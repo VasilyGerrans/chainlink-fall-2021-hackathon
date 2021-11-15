@@ -7,7 +7,7 @@ import AuctionChart from './components/AuctionChart';
 import humanizeDuration from 'humanize-duration';
 import { Grid } from '@mui/material';
 import { Popup } from 'reactjs-popup';
-
+import candleABI from './abi/Candle.json';
 
 function ViewAuction(props) {
     const { id } = useParams();
@@ -17,17 +17,26 @@ function ViewAuction(props) {
     const [ current, setCurrent ] = useState(5000);
     const [ bidding, setBidding ] = useState(10000);
     const [ closing, setClosing ] = useState(2000);
+    const CONTRACT_ADDR = "0xaDbe2339225C83DAfE0621c26f413da6dA879EC1";
 
     const findAuction = async () => {
-        const query = new props.Moralis.Query("auctions");
-        const result = await query.equalTo("objectId", id).first();
-        if (result === undefined) {
-            setBadUrl(true);
-        }
-        else {
-            let meta = await props.retrieveNFT(result.attributes.token_address, result.attributes.token_id, "eth");
+        const query = new props.Moralis.Query("AuctionCreated");
+        const result = query.get(id).then(async (auction) => {
+            const options = {
+                contractAddress: CONTRACT_ADDR,
+                functionName: "getAuction",
+                abi: candleABI,
+                params: {
+                    auctionId: auction.get("auctionId"),
+                }
+            };
+            const receipt = await props.Moralis.executeFunction(options);
+            console.log(receipt);
+            let meta = await props.retrieveNFT(receipt["0"], receipt["1"], "kovan");
             setLoadedNft(meta);
-        }
+        }, (error) => {
+            setBadUrl(true);
+        });
     }
 
     useEffect(() => {
