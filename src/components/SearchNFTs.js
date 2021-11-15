@@ -20,11 +20,13 @@ function SearchNFTs(props) {
 
     const retrieveNfts = async offset => {
         const response = await props.Moralis.Web3API.account.getNFTs({
-            chain: "eth", 
-            address: "0x24422361687270c1ac2dd3f336e1bc130849617b",
+            chain: "kovan", 
+            address: props.wallet,
             order: "name.ASC",
             offset: offset
         });        
+
+        console.log(response);
 
         let nfts = response.result?.map(nft => {
             if (nft.metadata === null) {
@@ -56,7 +58,7 @@ function SearchNFTs(props) {
 
     const retrieveSingleNft = async element => {
         setLoading(true);
-        let meta = await props.retrieveNFT(element.token_address, element.token_id, "eth");
+        let meta = await props.retrieveNFT(element.token_address, element.token_id, "kovan");
         setSelected(meta);
         setLoading(false);
     }
@@ -131,7 +133,7 @@ function SearchNFTs(props) {
                                                 await retrieveSingleNft(element);
                                             }}                         
                                         >
-                                            {element.name}
+                                            {element.name} {element.token_id}
                                         </Button>
                                     )                                                  
                                 })}
