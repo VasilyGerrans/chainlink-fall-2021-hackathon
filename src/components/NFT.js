@@ -23,7 +23,7 @@ function NFT(props) {
         <div className="NFT">
             <div>
                 <div>
-                    {props.data.animation_url == null ?
+                    {props.data == null || props.data.animation_url == null ?
                     <div style={{margin: "auto"}}>
                         <CircularProgress 
                             style={loading === false ? {display: "none"} : {}}
@@ -49,9 +49,9 @@ function NFT(props) {
                     >
                     </video>
                     }
-                    <h2 class="heading">{props.data.name}</h2>
+                    <h2 className="heading">{props.data.name}</h2>
                     <p>{props.data.description}</p>
-                    <button class="ops-button">
+                    <button className="ops-button">
                         <a style={{textDecoration: 'none', color: 'white'}} target="_blank" rel="noreferrer" href={'https://opensea.io/assets/' + props.data.token_address + '/' + props.data.token_id}>
                            OpenSea
                         </a>

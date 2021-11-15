@@ -38,11 +38,15 @@ function FeaturedAuction(props) {
                     />
                 </Grid>
                 <Grid item md={8}>
-                        <AuctionChart />
+                        <AuctionChart 
+                            Moralis={props.Moralis}
+                            auctionId={0}
+                            isInitialized={props.isInitialized}
+                        />
                 </Grid>
                 <Grid item md={12}>
-                <div class="nes-container with-title">
-                    <p class="title">{props.data.name}</p>
+                <div className="nes-container with-title">
+                    <p className="title">{props.data.name}</p>
                     <p>{props.data.description}</p>
                 </div>
                 </Grid>

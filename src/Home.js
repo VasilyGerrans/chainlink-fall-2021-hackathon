@@ -32,17 +32,19 @@ function Home(props) {
     return (
         <div>
             <div>
-                <h1 class="heading">
+                <h1 className="heading">
                     Featured Auction
                 </h1>
             </div>
             <div style={{display: "inline-block"}}>
                 <FeaturedAuction
                     data={props.featuredNft}
+                    Moralis={props.Moralis}
+                    isInitialized={props.isInitialized}
                 />
             </div>
             <div>
-                <h1 class="heading" id='liveAuctions'>Live auctions</h1>
+                <h1 className="heading" id='liveAuctions'>Live auctions</h1>
                 <div style={{textAlign: "left"}}>
                     {loadedAuctions.map(auction => {
                         return (

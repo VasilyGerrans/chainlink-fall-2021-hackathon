@@ -146,18 +146,18 @@ function App() {
       }
       <div>
         <Link to="/" style={{textDecoration: 'none'}}>
-          <h1 class="tlogo">
+          <h1 className="tlogo">
             meltdown
           </h1>
         </Link>
-        <div class="navbar">
-          <Link to="/"><button class="nav-button">Home</button></Link>
-          <div class="divider"/>
-          <a target="_blank" href="https://nftmelt.org"><button class="nav-button">About</button></a>
-          <div class="divider"/>
-          <Link to="/create"><button class="nav-button">Create Auction</button></Link>
-          <div class="divider"/>
-          <Link to="/#liveAuctions"><button class="nav-button">Live Auctions</button></Link>
+        <div className="navbar">
+          <Link to="/"><button className="nav-button">Home</button></Link>
+          <div className="divider"/>
+          <a target="_blank" href="https://nftmelt.org"><button className="nav-button">About</button></a>
+          <div className="divider"/>
+          <Link to="/create"><button className="nav-button">Create Auction</button></Link>
+          <div className="divider"/>
+          <Link to="/#liveAuctions"><button className="nav-button">Live Auctions</button></Link>
         </div>
       </div>
       <Switch>

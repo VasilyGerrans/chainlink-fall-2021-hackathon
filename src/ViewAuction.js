@@ -65,41 +65,47 @@ function ViewAuction(props) {
                             />
                         </Grid>
                         <Grid item md={8}>
-                            <AuctionChart />
+                            <AuctionChart 
+                                Moralis={props.Moralis}
+                                auctionId={1}
+                                isInitialized={props.isInitialized}
+                            />
                         </Grid>
                     </Grid>
 
                     <Grid item md={12}>
-                        <div class="nes-container bidButtons">
+                        <div className="nes-container bidButtons">
                             <Popup
-                                trigger={<button class="bid-button">Add to bid</button>}
+                                trigger={<button className="bid-button">Add to bid</button>}
                                 modal
                                 className="popup-content"
                             >
                                 {close => (
                                 <div className="modal">
-                                    <button className="close" onClick={close}>
-                                    &times;
-                                    </button>
-                                    <div className="header">Confirm bid</div>
+                                    <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                                        <div className="header">Confirm bid</div>
+                                        <button className="close" onClick={close}>
+                                        &times;
+                                        </button>
+                                    </div>
                                     <div className="content">
                                         <p>Your curent bid is: __ ETH</p>
                                         <p>The highest bid is __ ETH (you) </p>
-                                        <input class="bid-input" placeholder="1"></input> ETH
+                                        <input className="bid-input" placeholder="1"></input> ETH
                                     </div>
                                     <div className="actions">
-                                    <button class="bid-button"> Update bid </button>
-                                    <div class="divider"/>
+                                    <button className="bid-button"> Update bid </button>
+                                    <div className="divider"/>
                                     </div>
                                 </div>
                                 )}
                             </Popup>
-                            <div class="divider"/>
-                            <button class="bid-button">Withdraw</button>
+                            <div className="divider"/>
+                            <button className="bid-button">Withdraw</button>
                         </div>
                     </Grid>
                     <Grid item md={12}>
-                        <div class="nes-container">
+                        <div className="nes-container">
                             <div>
                                 <h2>Auction Information</h2>
                                 <div>
@@ -118,7 +124,7 @@ function ViewAuction(props) {
                                         {ellipsisAddress("0x187e11BFcD3998150487444dA5B736F1DF133154", 4)}, 3 ETH, block 3000
                                     </li>
                                     <li>
-                                        {ellipsisAddress("0xffA1c53b18d864A6340adA628BdFF6651fa4E097", 4)}, 2 WETH, block 200
+                                        {ellipsisAddress("0xffA1c53b18d864A6340adA628BdFF6651fa4E097", 4)}, 2 ETH, block 200
                                     </li>
                                 </ol>
                             </div>

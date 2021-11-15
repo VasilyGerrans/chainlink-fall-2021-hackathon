@@ -35,7 +35,7 @@ function MiniViewAuction(props) {
                             />
                             <CardContent>
                                 <h4 style={{margin: "5px auto"}}>
-                                    Current: 0 WETH
+                                    Current: 0 ETH
                                 </h4>
                                 <AuctionBar 
                                     closingPercentage={props.closingPercentage}
