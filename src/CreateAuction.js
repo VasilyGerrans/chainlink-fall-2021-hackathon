@@ -22,6 +22,7 @@ function CreateAuction(props) {
     const [ tknMsg, setTknMsg] = useState("");
     const [ tkErr, setTkErr] = useState(false);
     const [ loadedNft, setLoadedNft ] = useState({});
+    const [ hasApproved, setHasApproved ] = useState(false);
     
     const resetCreateAuction = () => {
         setAlignment("eth");
@@ -48,8 +49,9 @@ function CreateAuction(props) {
     }
 
     const resetNft = () => {
-        console.log("CAlled");
+        console.log("Called");
         setLoadedNft({});
+        setHasApproved(false);
     }
 
     useEffect(() => {
@@ -62,7 +64,6 @@ function CreateAuction(props) {
     }    
 
     const sendNFTApprove = () => {
-
     }
 
     const sendCreateAuction = () => {
@@ -83,6 +84,7 @@ function CreateAuction(props) {
                         wallet={props.wallet}
                         Moralis={props.Moralis}
                         retrieveNFT={props.retrieveNFT}
+                        setLoadedNft={setLoadedNft}
                     />
                     {/* 
                     {loading === true ? 
@@ -177,13 +179,13 @@ function CreateAuction(props) {
                 <div className="convenience-container">
                 <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                     <div>
-                    <Tooltip title="Determines the starting amount bidders will have to bid." placement="left">
+                    <Tooltip title="The minimum amount to win the auction." placement="left">
                         <Input
                             type="number"
                             placeholder="starting bid"
                             value={startingBid} 
                             onChange={event => {
-                                if (event.target.value > 0) {
+                                if (event.target.value >= 0) {
                                     setStartingBid(event.target.value);
                                 }
                                 else if (event.target.value === "0" || event.target.value === "") {
@@ -292,7 +294,6 @@ function CreateAuction(props) {
                 }
                 <div style={{margin: "20px", textAlign: "center"}}>
                 <ButtonGroup size="medium" aria-label="small button group">
-		        <button className="ops-button">Approve NFT</button>
                 <Button 
                         onClick={sendNFTApprove}
                     disabled={!(startingBid !== "" && Number(startingBid) > 0 &&
@@ -305,7 +306,7 @@ function CreateAuction(props) {
                         onClick={sendCreateAuction}
                         disabled={!(startingBid !== "" && Number(startingBid) > 0 &&
                             auctionTime !== "" && Number(auctionTime) > 0 && 
-                            loadedNft.token_address != undefined)}
+                            loadedNft.token_address != undefined && hasApproved)}
                         >
                     create auction
                 </Button>
