@@ -27,7 +27,7 @@ function FeaturedAuction(props) {
     return (
         <div className="FeaturedAuction">
             <Grid container>
-                <Grid item md={4}>
+                <Grid item xs={4}>
                     <img 
                         src={fixUrl(props.data.image)} 
                         alt={props.data.name}
@@ -37,11 +37,12 @@ function FeaturedAuction(props) {
                         }}
                     />
                 </Grid>
-                <Grid item md={8}>
+                <Grid item xs={8}>
                         <AuctionChart 
                             Moralis={props.Moralis}
                             auctionId={0}
                             isInitialized={props.isInitialized}
+                            web3={props.web3}
                         />
                 </Grid>
                 <Grid item md={12}>
