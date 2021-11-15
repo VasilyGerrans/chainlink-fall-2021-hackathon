@@ -26,6 +26,18 @@ function CreateAuction(props) {
     const [ tkErr, setTkErr] = useState(false);
     const [ loadedNft, setLoadedNft ] = useState({});
     const [ hasApproved, setHasApproved ] = useState(false);
+    const [ candleContract, setCandleContract ] = useState();
+    const [ nftContract, setnftContract ] = useState();
+
+    const CONTRACT_ADDR = "0xaDbe2339225C83DAfE0621c26f413da6dA879EC1";
+
+    const loadNftAndContract = (nft) => {
+        if (nft !== null && nft !== undefined){
+            setLoadedNft(nft);
+            const c = new props.web3.eth.Contract(ierc721ABI,nft.token_address)
+            setnftContract(c);
+        }
+    }
     
     const resetCreateAuction = () => {
         setAlignment("eth");
@@ -59,6 +71,11 @@ function CreateAuction(props) {
 
     useEffect(() => {
         console.log('reset to', loadedNft);
+        console.log(candleABI);
+        if(props.web3 !== undefined && props.web3 !== null){
+            const c = new props.web3.eth.Contract(candleABI,CONTRACT_ADDR )
+            setCandleContract(c);
+        }
     }, [loadedNft]);
     
     const blocksFromTime = () => {
@@ -66,11 +83,39 @@ function CreateAuction(props) {
         return Math.ceil(Number(auctionTime) * 60 * 60 * timeMultiplier / 13);
     }    
 
-    const sendNFTApprove = () => {
+    const sendNFTApprove = async () => {
+        const options = {
+            contractAddress: loadedNft.token_address,
+            functionName: "approve",
+            abi: ierc721ABI,
+            params: {
+                to: CONTRACT_ADDR,
+                tokenId: loadedNft.token_id
+            },
+            awaitReceipt: false
+        };
+        const receipt = await props.Moralis.executeFunction(options);
+        receipt.on("transactionHash",(receipt) => {
+            setHasApproved(true);
+        })
+        console.log(receipt);
     }
 
-    const sendCreateAuction = () => {
-        console.log(auctionTime, startingBid, token);
+    const sendCreateAuction = async () => {
+        const options = {
+            contractAddress: CONTRACT_ADDR,
+            functionName: "createAuction",
+            abi: candleABI,
+            params: {
+                _tokenAddress: loadedNft.token_address,
+                _tokenId: loadedNft.token_id,
+                _auctionLengthBlocks: blocksFromTime(),
+                _closingLengthBlocks: Math.round(blocksFromTime() * (1 - closingPerc / 100)),
+                _minBid: props.Moralis.Units.ETH(startingBid),
+            },
+        };
+        const receipt = await props.Moralis.executeFunction(options);
+        console.log(receipt);
     }
 
     return (
@@ -87,7 +132,7 @@ function CreateAuction(props) {
                         wallet={props.wallet}
                         Moralis={props.Moralis}
                         retrieveNFT={props.retrieveNFT}
-                        setLoadedNft={setLoadedNft}
+                        setLoadedNft={loadNftAndContract}
                     />
                     {/* 
                     {loading === true ? 
@@ -308,8 +353,8 @@ function CreateAuction(props) {
                     <Button 
                         onClick={sendCreateAuction}
                         disabled={!(startingBid !== "" && Number(startingBid) > 0 &&
-                            auctionTime !== "" && Number(auctionTime) > 0 && 
-                            loadedNft.token_address != undefined && hasApproved)}
+                        auctionTime !== "" && Number(auctionTime) > 0 && 
+                        loadedNft.token_address !== undefined && hasApproved)}
                         >
                     create auction
                 </Button>
