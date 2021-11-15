@@ -11,7 +11,8 @@ function AuctionChart(props) {
         if (props.isInitialized === true &&
             props.Moralis !== undefined && 
             props.Moralis !== null && 
-            props.auctionId >= 0) {
+            props.auctionId >= 0 &&
+            props.web3 !== undefined) {
             (async () => {
                 await getBidSeries();
             })();
@@ -29,8 +30,7 @@ function AuctionChart(props) {
         }
 
         // can be moved further up the hierarchy later
-        var web3 = new Web3('https://kovan.infura.io/v3/416304afa6a24e61934cad318b64884c');
-        let currentBlock = await web3.eth.getBlockNumber();
+        let currentBlock = await props.web3.eth.getBlockNumber();
 
         if (catArray.includes(currentBlock) === false) {
             catArray.push(currentBlock);

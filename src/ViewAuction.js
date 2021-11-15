@@ -69,6 +69,7 @@ function ViewAuction(props) {
                                 Moralis={props.Moralis}
                                 auctionId={1}
                                 isInitialized={props.isInitialized}
+                                web3={props.web3}
                             />
                         </Grid>
                     </Grid>

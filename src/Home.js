@@ -41,6 +41,7 @@ function Home(props) {
                     data={props.featuredNft}
                     Moralis={props.Moralis}
                     isInitialized={props.isInitialized}
+                    web3={props.web3}
                 />
             </div>
             <div>

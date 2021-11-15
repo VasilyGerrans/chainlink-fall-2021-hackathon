@@ -12,12 +12,14 @@ import "nes.css/css/nes.min.css";
 import 'reactjs-popup/dist/index.css';
 import './App.css';
 import ViewAuction from './ViewAuction';
+import { propTypes } from 'react-bootstrap/esm/Image';
 
 function App() {
   const { Moralis, isInitialized } = useMoralis();
   const [ validNetwork, setValidNetwork ] = useState(false);
   const [ wallet, setWallet ] = useState("");
   const [ featuredNft, setFeaturedNft ] = useState({});
+  const [ web3, setWeb3 ] = useState();
 
   const history = useHistory();
 
@@ -70,12 +72,14 @@ function App() {
 
   const initWeb3 = async () => {
     const provider = await detectEthereumProvider();
-    const web3 = new Web3(provider);
+    console.log(provider);
+    const web3 = new Web3("https://kovan.infura.io/v3/416304afa6a24e61934cad318b64884c");
 
     if (web3 != undefined) {
       await web3.eth.net.getId()
       .then(id => {
         if (Number(id) === networkId) {
+          setWeb3(web3);
           setValidNetwork(true);
         }
       })
@@ -166,6 +170,7 @@ function App() {
             Moralis={Moralis}
             isInitialized={isInitialized}
             featuredNft={featuredNft}
+            web3={web3}
           />          
         </Route>
         <Route path="/create">
@@ -181,6 +186,7 @@ function App() {
             Moralis={Moralis}
             isInitialized={isInitialized}
             retrieveNFT={retrieveNFT}
+            web3={web3}
           />
         </Route>
       </Switch>
