@@ -91,8 +91,7 @@ function CreateAuction(props) {
         const receipt = await props.Moralis.executeFunction(options);
         receipt.on("transactionHash",(receipt) => {
             setHasApproved(true);
-        })
-        console.log(receipt);
+        });
     }
 
     const sendCreateAuction = async () => {
@@ -249,20 +248,26 @@ function CreateAuction(props) {
                 <div style={{margin: "20px", textAlign: "center"}}>
                 <ButtonGroup size="medium" aria-label="small button group">
                 <Button 
-                        onClick={sendNFTApprove}
-                    disabled={!(startingBid !== "" && Number(startingBid) > 0 &&
+                    onClick={sendNFTApprove}
+                    disabled={
+                        (!(startingBid !== "" && Number(startingBid) > 0 &&
                         auctionTime !== "" && Number(auctionTime) > 0 && 
-                        loadedNft.token_address != undefined)}
-                        >
-                        approve nft
-                    </Button>
-                    <Button 
-                        onClick={sendCreateAuction}
-                        disabled={!(startingBid !== "" && Number(startingBid) > 0 &&
+                        loadedNft.token_address != undefined)) ||
+                        hasApproved === true
+                    }
+                >
+                    approve nft
+                </Button>
+                <Button 
+                    onClick={sendCreateAuction}
+                    disabled={
+                        (!(startingBid !== "" && Number(startingBid) > 0 &&
                         auctionTime !== "" && Number(auctionTime) > 0 && 
-                        loadedNft.token_address !== undefined && hasApproved)}
-                        >
-                    create auction
+                        loadedNft.token_address !== undefined && hasApproved)) ||
+                        hasApproved === false
+                    }
+                >
+                create auction
                 </Button>
                 </ButtonGroup>
                 </div>

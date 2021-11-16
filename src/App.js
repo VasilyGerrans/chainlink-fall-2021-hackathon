@@ -12,7 +12,6 @@ import "nes.css/css/nes.min.css";
 import 'reactjs-popup/dist/index.css';
 import './App.css';
 import ViewAuction from './ViewAuction';
-import { propTypes } from 'react-bootstrap/esm/Image';
 
 function App() {
   const { Moralis, isInitialized } = useMoralis();
