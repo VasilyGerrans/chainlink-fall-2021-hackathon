@@ -70,7 +70,6 @@ function CreateAuction(props) {
 
     useEffect(() => {
         console.log('reset to', loadedNft);
-        console.log(candleABI);
     }, [loadedNft]);
     
     const blocksFromTime = () => {
