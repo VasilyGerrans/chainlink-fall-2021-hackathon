@@ -212,6 +212,9 @@ a {
 .bid-button:hover {
   background-color: #274bc2;
 }
+.bid-button:disabled {
+  background-color: lightgrey;
+}
 
 .nav-button {
   background-color: #ff6700;
