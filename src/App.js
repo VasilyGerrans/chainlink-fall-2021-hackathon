@@ -183,6 +183,7 @@ function App() {
             isInitialized={isInitialized}
             retrieveNFT={retrieveNFT}
             web3={web3}
+            wallet={wallet}
           />
         </Route>
       </Switch>
