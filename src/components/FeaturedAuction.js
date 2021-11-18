@@ -46,8 +46,8 @@ function FeaturedAuction(props) {
                         />
                 </Grid>
                 <Grid item md={12}>
-                <div className="nes-container with-title">
-                    <p className="title">{props.data.name}</p>
+                <div className="nes-container">
+                    <h3>{props.data.name}</h3>
                     <p>{props.data.description}</p>
                 </div>
                 </Grid>
