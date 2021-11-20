@@ -19,18 +19,21 @@ function ViewAuction(props) {
     const [ current, setCurrent ] = useState(5000);
     const [ bidding, setBidding ] = useState(10000);
     const [ closing, setClosing ] = useState(2000);
+    const [ blocks, setBlocks ] = useState({});
     const [ myBid, setMyBid ] = useState(0);
     const [ aid, setAuctionId ] = useState(0);
     const [ auctionStage, setAuctionStage ] = useState(0);
     const CONTRACT_ADDR = "0xaDbe2339225C83DAfE0621c26f413da6dA879EC1";
 
     const findAuction = async () => {
+        console.log("CALLED");
         const query = new props.Moralis.Query("AuctionCreated");
-        const result = query.get(id).then(async (auction) => {
+        const result = await query.get(id).then(async (auction) => {
+            console.log("CALLED 2", auction);
             setAuctionId(auction.get("auctionId"));
             const currentBlock = await props.web3.eth.getBlockNumber();
-            const closingBlock = auction.get("closingBlock");
-            const finalBlock = auction.get("finalBlock");
+            const closingBlock = Number(auction.attributes.closingBlock);
+            const finalBlock = Number(auction.attributes.finalBlock);
             if (currentBlock < closingBlock) {
                 // we are in regular bidding phase
                 setAuctionStage(0);
@@ -41,6 +44,14 @@ function ViewAuction(props) {
                 // auction has ended
                 setAuctionStage(2);
             }
+            setCurrent(currentBlock);
+            setBidding(closingBlock)
+            setClosing(finalBlock);
+            setBlocks({
+                created: auction.attributes.block_number,
+                closing: Number(auction.attributes.closingBlock),
+                final: Number(auction.attributes.finalBlock)
+            });
             const options = {
                 contractAddress: CONTRACT_ADDR,
                 functionName: "getAuction",
@@ -51,6 +62,7 @@ function ViewAuction(props) {
             };
             const receipt = await props.Moralis.executeFunction(options);
             let meta = await props.retrieveNFT(receipt["0"], receipt["1"], "kovan");
+            console.log(meta);
             setLoadedNft(meta);
         }, (error) => {
             setBadUrl(true);
@@ -161,6 +173,7 @@ function ViewAuction(props) {
                                 auctionId={1}
                                 isInitialized={props.isInitialized}
                                 web3={props.web3}
+                                blocks={blocks}
                             />
                         </Grid>
                     </Grid>
