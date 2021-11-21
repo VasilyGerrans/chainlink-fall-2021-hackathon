@@ -1,12 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import Chart from "react-apexcharts";
 import { ellipsisAddress } from '../utilities';
-import Web3 from 'web3';
 
 function AuctionChart(props) {
     const [ series, setSeries ] = useState([]);
     const [ categories, setCategories ] = useState([]);
+    const [ colorCols, setColorCols ] = useState([]);
 
+    useEffect(() => {
+        if (props.blocks != {} && props.blocks != undefined) {
+            var catArr = [];
+            for(var i = 0; i < props.blocks.final - props.blocks.created; i++) {
+                catArr.push(props.blocks.created + i);
+            }
+            if (catArr.length === props.blocks.final - props.blocks.created) {
+                setCategories(catArr);
+            }
+
+            var seriesArr = [0,0,0,0,0,10,10,10,10]
+
+            for (var i = seriesArr.length; i < catArr.length; i++) {
+                seriesArr.push(seriesArr[i - 1]);
+            }
+
+            setSeries([
+                {
+                    name: "Some address", 
+                    data: seriesArr
+                }, 
+                {
+                    name: "Another address", 
+                    data: seriesArr.map(e => e + 2)
+                }
+            ]);
+
+            var colsArr = [];
+
+            for (var i = 0; i < seriesArr.length; i++) {
+                if (props.blocks.created + i <= props.blocks.closing) {
+                    colsArr.push("white");
+                }
+                else {
+                    colsArr.push("red");
+                }
+            }
+            setColorCols(colsArr);
+        }
+    }, [props.blocks]);
+    
     useEffect(() => {
         if (props.isInitialized === true &&
             props.Moralis !== undefined && 
@@ -14,7 +55,7 @@ function AuctionChart(props) {
             props.auctionId >= 0 &&
             props.web3 !== undefined) {
             (async () => {
-                await getBidSeries();
+                // await getBidSeries();
             })();
         }
     }, [props.Moralis, props.auctionId, props.isInitialized]);
@@ -99,16 +140,36 @@ function AuctionChart(props) {
         <div>
             <Chart
                 type="line"
-                options={{
+                options={{   
+                    grid: {
+                        column: {
+                            colors: colorCols
+                        }
+                    },
+                    noData: {
+                        text: "no bids yet",
+                        align: 'center',
+                        verticalAlign: 'middle',
+                        offsetX: 0,
+                        offsetY: 0,
+                        style: {
+                          fontSize: '25px'
+                        }
+                    },
                     xaxis: {
+                        type: "category",
+                        tickAmount: 5,
                         categories: categories,
-                        show: true
+                        show: false,
+                        axisTicks: {
+                            show: false
+                        }
                     },
                     stroke: {
                         curve: "stepline"
                     },
                     title: {
-                        text: "Bids",
+                        text: "bids",
                         align: "left"
                     },   
                     chart: {
@@ -117,7 +178,7 @@ function AuctionChart(props) {
                                 pan: false
                             }
                         }
-                    }                 
+                    },      
                 }}                
                 series={series}
             />
