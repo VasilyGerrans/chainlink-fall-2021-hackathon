@@ -22,7 +22,7 @@ function ViewAuction(props) {
     const [ blocks, setBlocks ] = useState({});
     const [ myBid, setMyBid ] = useState(0);
     const [ aid, setAuctionId ] = useState(0);
-    const [ auctionStage, setAuctionStage ] = useState(0);
+    const [ auctionStage, setAuctionStage ] = useState();
     const CONTRACT_ADDR = "0xaDbe2339225C83DAfE0621c26f413da6dA879EC1";
 
     const findAuction = async () => {
@@ -215,13 +215,16 @@ function ViewAuction(props) {
                                 )}
                             </Popup>
                             <div className="divider"/>
-                            <button onClick={ withdraw } className="bid-button">Withdraw</button>
+                            <button onClick={ withdraw } disabled={auctionStage!==2} className="bid-button">Withdraw</button>
                         </div>
                     </Grid>
                     <Grid item md={12}>
                         <div className="nes-container">
                             <div>
                                 <h2>Auction Information</h2>
+                                {auctionStage===0 && <b style={{color: "red"}}>Auction Live</b>}
+                                {auctionStage===1 && <b style={{color: "orange"}}>Auction Finalising</b>}
+                                {auctionStage===2 && <b style={{color: "green"}}>Auction Finished</b>}
                                 <div>
                                     Current block: {current}<br/>
                                     Remaining blocks: {bidding + closing - current}<br/>
