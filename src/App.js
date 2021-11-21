@@ -49,7 +49,7 @@ function App() {
     return null;
   }
   const getFeaturedAuction = async() => {
-      let meta = await retrieveNFT("0xa7d8d9ef8d8ce8992df33d8b8cf4aebabd5bd270", 78000313, "eth");
+      let meta = await retrieveNFT("0xa1b028b06b1663c2e3ca6ccf0d2374d1d2edfc97", 33, "kovan");
       console.log(meta);
       // Show it as an image
       meta.animation_url = null;
@@ -166,6 +166,7 @@ function App() {
             Moralis={Moralis}
             isInitialized={isInitialized}
             featuredNft={featuredNft}
+            auctionId={31}
           />          
         </Route>
         <Route path="/create">

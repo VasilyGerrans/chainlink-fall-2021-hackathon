@@ -22,14 +22,12 @@ function ViewAuction(props) {
     const [ blocks, setBlocks ] = useState({});
     const [ myBid, setMyBid ] = useState(0);
     const [ aid, setAuctionId ] = useState(0);
-    const [ auctionStage, setAuctionStage ] = useState(0);
+    const [ auctionStage, setAuctionStage ] = useState();
     const CONTRACT_ADDR = "0xaDbe2339225C83DAfE0621c26f413da6dA879EC1";
 
     const findAuction = async () => {
-        console.log("CALLED");
         const query = new props.Moralis.Query("AuctionCreated");
         const result = await query.get(id).then(async (auction) => {
-            console.log("CALLED 2", auction);
             setAuctionId(auction.get("auctionId"));
             const currentBlock = await props.web3.eth.getBlockNumber();
             const closingBlock = Number(auction.attributes.closingBlock);
@@ -60,10 +58,12 @@ function ViewAuction(props) {
                     auctionId: auction.get("auctionId"),
                 }
             };
-            const receipt = await props.Moralis.executeFunction(options);
+            console.log("GETTING AUCTION");
+            /*const receipt = await props.Moralis.executeFunction(options);
+            console.log(receipt);
             let meta = await props.retrieveNFT(receipt["0"], receipt["1"], "kovan");
             console.log(meta);
-            setLoadedNft(meta);
+            setLoadedNft(meta);*/
         }, (error) => {
             setBadUrl(true);
         });
@@ -208,7 +208,7 @@ function ViewAuction(props) {
                                         </input> ETH
                                     </div>
                                     <div className="actions">
-                                    <button className="bid-button" onClick={updateBid}> Update bid </button>
+                                    <button className="bid-button" disabled={auctionStage!==2} onClick={updateBid}> Update bid </button>
                                     <div className="divider"/>
                                     </div>
                                 </div>
@@ -222,10 +222,13 @@ function ViewAuction(props) {
                         <div className="nes-container">
                             <div>
                                 <h2>Auction Information</h2>
+                                {auctionStage===0 && <b style={{color: "red"}}>Auction Live</b>}
+                                {auctionStage===1 && <b style={{color: "orange"}}>Auction Finalising</b>}
+                                {auctionStage===2 && <b style={{color: "green"}}>Auction Finished</b>}
                                 <div>
                                     Current block: {current}<br/>
                                     Remaining blocks: {bidding + closing - current}<br/>
-                                    Approx time remaining: {humanizeDuration((bidding + closing - current)*13000)}
+                                    Approx time remaining: {humanizeDuration((bidding + closing - current)*13)}
                                 </div>                        
                             </div>
                             <div>

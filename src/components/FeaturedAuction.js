@@ -40,7 +40,7 @@ function FeaturedAuction(props) {
                 <Grid item xs={8}>
                         <AuctionChart 
                             Moralis={props.Moralis}
-                            auctionId={0}
+                            auctionId={props.auctionId}
                             isInitialized={props.isInitialized}
                             web3={props.web3}
                         />
