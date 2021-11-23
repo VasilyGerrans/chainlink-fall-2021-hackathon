@@ -106,9 +106,6 @@
   font-family: 'Meltdown';
   font-size: 30px;
 }
-.nes-container {
-  width: 900px;
-}
 
 body {
   margin: 0;
@@ -184,6 +181,9 @@ a {
   background-color: #274bc2;
   color: white;
 }
+.ops-button:disabled {
+  background-color: lightgrey;
+}
 
 .bidButtons {
   display: flex;
@@ -231,4 +231,3 @@ a {
 .nav-button:hover {
   background-color: #CC5200;
 }
-
