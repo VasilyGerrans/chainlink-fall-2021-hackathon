@@ -246,30 +246,31 @@ function CreateAuction(props) {
                 </div>
                 }
                 <div style={{margin: "20px", textAlign: "center"}}>
-                <ButtonGroup size="medium" aria-label="small button group">
-                <Button 
+                <button 
+                    class="ops-button"
                     onClick={sendNFTApprove}
                     disabled={
-                        (!(startingBid !== "" && Number(startingBid) > 0 &&
+                        (!(startingBid !== "" && Number(startingBid) >= 0 &&
                         auctionTime !== "" && Number(auctionTime) > 0 && 
                         loadedNft.token_address != undefined)) ||
                         hasApproved === true
                     }
                 >
-                    approve nft
-                </Button>
-                <Button 
+                    Approve NFT
+                </button>
+                <div class="divider"/>
+                <button 
+                    class="ops-button"
                     onClick={sendCreateAuction}
                     disabled={
-                        (!(startingBid !== "" && Number(startingBid) > 0 &&
+                        (!(startingBid !== "" && Number(startingBid) >= 0 &&
                         auctionTime !== "" && Number(auctionTime) > 0 && 
                         loadedNft.token_address !== undefined && hasApproved)) ||
                         hasApproved === false
                     }
                 >
-                create auction
-                </Button>
-                </ButtonGroup>
+                Create Auction
+                </button>
                 </div>
             </div>        
         </div>

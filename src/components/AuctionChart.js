@@ -6,109 +6,27 @@ function AuctionChart(props) {
     const [ series, setSeries ] = useState([]);
     const [ categories, setCategories ] = useState([]);
     const [ colorCols, setColorCols ] = useState([]);
-
-    useEffect(() => {
-        if (props.blocks != {} && props.blocks != undefined) {
-            var catArr = [];
-            for(var i = 0; i < props.blocks.final - props.blocks.created; i++) {
-                catArr.push(props.blocks.created + i);
-            }
-            if (catArr.length === props.blocks.final - props.blocks.created) {
-                setCategories(catArr);
-            }
-
-            var seriesArr = [0,0,0,0,0,10,10,10,10]
-
-            for (var i = seriesArr.length; i < catArr.length; i++) {
-                seriesArr.push(seriesArr[i - 1]);
-            }
-
-            setSeries([
-                {
-                    name: "Some address", 
-                    data: seriesArr
-                }, 
-                {
-                    name: "Another address", 
-                    data: seriesArr.map(e => e + 2)
-                }
-            ]);
-
-            var colsArr = [];
-
-            for (var i = 0; i < seriesArr.length; i++) {
-                if (props.blocks.created + i <= props.blocks.closing) {
-                    colsArr.push("white");
-                }
-                else {
-                    colsArr.push("red");
-                }
-            }
-            setColorCols(colsArr);
-        }
-    }, [props.blocks]);
     
     useEffect(() => {
-        if (props.isInitialized === true &&
+        if (
             props.Moralis !== undefined && 
             props.Moralis !== null && 
-            props.auctionId >= 0 &&
-            props.web3 !== undefined) {
+            props.auctionId !== undefined &&
+            props.web3 !== undefined &&
+            props.blocks.created !== undefined
+        ){
             (async () => {
-                // await getBidSeries();
+                await getBidSeriesCaleb();
             })();
         }
-    }, [props.Moralis, props.auctionId, props.isInitialized]);
+    }, [props.Moralis, props.auctionId, props.isInitialized, props.web3, props.blocks]);
 
-
-    function sliceIntoChunks(arr, chunkSize) {
-        const res = [];
-        for (let i = 0; i < arr.length; i += chunkSize) {
-            const chunk = arr.slice(i, i + chunkSize);
-            res.push(chunk);
-        }
-        return res;
-    }
 
     //divide total auction time into min(blocks, 1000) different segments
     const getBidSeriesCaleb = async() => {
         const query = new props.Moralis.Query("BidIncreased");
-        const length = props.blocks.final - props.blocks.created;
-        const numOfChunks = Math.min(length, 1000);
-        const chunkSize = Math.floor(length/numOfChunks);
-        query.equalTo("auctionId", props.auctionId.toString());
+        query.ascending("block_number");
         const result = await query.find();
-        let blockArray = Array.from({length: length}, (e, i)=> i+props.blocks.final);
-        const slicedBlocks = sliceIntoChunks(blockArray, chunkSize);
-
-        // fetch unique bidders
-        let bidders = [];
-        for (let element of result) {
-            let bidder = element.attributes.bidder;
-            if (bidders.indexOf(bidder) === -1) {
-                bidders.push(bidder);
-            }
-        }
-    }
-
-    const getBidSeries = async () => {
-        const query = new props.Moralis.Query("BidIncreased");
-        query.equalTo("auctionId", props.auctionId.toString());
-        const result = await query.find();
-
-        let catArray = [];
-        for (var i = 0; i < result.length; i++) {
-            catArray.push(result[i].attributes.block_number);
-        }
-
-        // can be moved further up the hierarchy later
-        let currentBlock = await props.web3.eth.getBlockNumber();
-
-        if (catArray.includes(currentBlock) === false) {
-            catArray.push(currentBlock);
-        }
-        
-        setCategories(catArray);
 
         // fetch unique bidders
         let bidders = [];
@@ -121,62 +39,51 @@ function AuctionChart(props) {
 
         // pretty sure this should always give us the correct 
         // top five bidders
-        if (bidders.length > 5) {
-            // find top 5
-            let topBidders = [];
-            for (var i = 0; i < bidders.length; i++) {
-                let bidderTotal = 0;
-                for (var j = 0; j < result.length; j++) {
-                    if (result[j].attributes.bidder === bidders[i]) {
-                        bidderTotal += Number(result[j].attributes.amount);
-                    }
+        let topBidders = [];
+        for (var i = 0; i < bidders.length; i++) {
+            let bidderTotal = 0;
+            for (var j = 0; j < result.length; j++) {
+                if (result[j].attributes.bidder === bidders[i]) {
+                    bidderTotal += Number(result[j].attributes.amount);
                 }
-                topBidders.push({bidder: bidders[i], total: bidderTotal});
             }
-
-            topBidders.sort((a, b) => b.total - a.total);
-            topBidders.slice(0, 5);
-            bidders = topBidders.map(bidderObj => bidderObj.bidder);
+            topBidders.push({bidder: bidders[i], total: bidderTotal});
         }
-        
+
+        topBidders.sort((a, b) => b.total - a.total);
+        console.log(topBidders);
+        topBidders.slice(0, 5);
+        bidders = topBidders.map(bidderObj => bidderObj.bidder);
+        let amounts = topBidders.map(bidderObj => bidderObj.total);
+        props.setTopBidders(bidders);
+        props.setTopAmounts(amounts);
+
         let seriesArr = bidders.map(bidder => {
-            let data = [];
-            for (var i = 0; i < catArray.length; i++) {
-                if (i === 0) {
-                    if (result[i].attributes.bidder === bidder) {
-                        data.push(Number(result[i].attributes.amount));
-                    } else {
-                        data.push(0);
+            var cum = [];
+            for (var i = 0; i < result.length; i++){
+                if (result[i].attributes.bidder === bidder) {
+                    if(cum.length === 0) {
+                        cum.push([result[i].attributes.block_number, 0]);
                     }
-                } else if (i === catArray.length - 1) {
-                    data.push(data[i - 1]);
-                } else {
-                    if (result[i].attributes.bidder === bidder) {
-                        data.push(Number(result[i].attributes.amount) + data[i-1]);
-                    } else {
-                        data.push(data[i - 1]);
-                    }
+                    cum.push([result[i].attributes.block_number, cum[cum.length - 1][1] + Number(result[i].attributes.amount)]);
                 }
             }
+            cum.push([Math.min(props.blocks.current, props.blocks.final), cum[cum.length-1][1]])
             return {
                 name: ellipsisAddress(bidder, 4),
-                data
+                data: cum
             }
         });
-
+        console.log(seriesArr);
         setSeries(seriesArr);
     }
+
 
     return (        
         <div>
             <Chart
                 type="line"
                 options={{   
-                    grid: {
-                        column: {
-                            colors: colorCols
-                        }
-                    },
                     noData: {
                         text: "no bids yet",
                         align: 'center',
@@ -187,13 +94,17 @@ function AuctionChart(props) {
                           fontSize: '25px'
                         }
                     },
+                    legend: {
+                        show: true
+                    },
                     xaxis: {
-                        type: "category",
-                        tickAmount: 5,
-                        categories: categories,
-                        show: false,
-                        axisTicks: {
-                            show: false
+                        type: 'numeric',
+                    },
+                    yaxis: {
+                        labels:{
+                            formatter: function(val, index) {
+                                return props.Moralis.Units.FromWei(val) + " ETH";
+                            }
                         }
                     },
                     stroke: {
@@ -202,14 +113,7 @@ function AuctionChart(props) {
                     title: {
                         text: "bids",
                         align: "left"
-                    },   
-                    chart: {
-                        toolbar: {
-                            tools: {
-                                pan: false
-                            }
-                        }
-                    },      
+                    },  
                 }}                
                 series={series}
             />
