@@ -60,6 +60,37 @@ function AuctionChart(props) {
         }
     }, [props.Moralis, props.auctionId, props.isInitialized]);
 
+
+    function sliceIntoChunks(arr, chunkSize) {
+        const res = [];
+        for (let i = 0; i < arr.length; i += chunkSize) {
+            const chunk = arr.slice(i, i + chunkSize);
+            res.push(chunk);
+        }
+        return res;
+    }
+
+    //divide total auction time into min(blocks, 1000) different segments
+    const getBidSeriesCaleb = async() => {
+        const query = new props.Moralis.Query("BidIncreased");
+        const length = props.blocks.final - props.blocks.created;
+        const numOfChunks = Math.min(length, 1000);
+        const chunkSize = Math.floor(length/numOfChunks);
+        query.equalTo("auctionId", props.auctionId.toString());
+        const result = await query.find();
+        let blockArray = Array.from({length: length}, (e, i)=> i+props.blocks.final);
+        const slicedBlocks = sliceIntoChunks(blockArray, chunkSize);
+
+        // fetch unique bidders
+        let bidders = [];
+        for (let element of result) {
+            let bidder = element.attributes.bidder;
+            if (bidders.indexOf(bidder) === -1) {
+                bidders.push(bidder);
+            }
+        }
+    }
+
     const getBidSeries = async () => {
         const query = new props.Moralis.Query("BidIncreased");
         query.equalTo("auctionId", props.auctionId.toString());
