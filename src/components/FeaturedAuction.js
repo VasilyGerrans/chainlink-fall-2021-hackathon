@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import NFT from './NFT';
 import AuctionChart from './AuctionChart';
 import { ellipsisAddress } from '../utilities';
+import { HashLink as Link} from 'react-router-hash-link';
 import { Grid } from '@mui/material';
 
 
 // A featured auction is a big NFT alongside an auction chart
 function FeaturedAuction(props) {
     const [ loading, setLoading ] = useState(true);
+    const FEATUERED_AUCTION_ID = 31;
+    const FEATURED_ID = "3oCAjhyyziGwgFzpr6olZ2FK";
 
     const fixUrl = url => {
         if (url === "" || url ==="#" || url === undefined || url === null) {
@@ -26,7 +29,7 @@ function FeaturedAuction(props) {
 
     return (
         <div className="FeaturedAuction">
-            <Grid container>
+            <Grid container spacing={2}>
                 <Grid item xs={4}>
                     <img 
                         src={fixUrl(props.data.image)} 
@@ -38,17 +41,12 @@ function FeaturedAuction(props) {
                     />
                 </Grid>
                 <Grid item xs={8}>
-                        <AuctionChart 
-                            Moralis={props.Moralis}
-                            auctionId={0}
-                            isInitialized={props.isInitialized}
-                            web3={props.web3}
-                        />
-                </Grid>
-                <Grid item md={12}>
                 <div className="nes-container">
                     <h3>{props.data.name}</h3>
-                    <p>{props.data.description}</p>
+                    <p>"{props.data.description}"</p>
+                    <Link to={`/auction/${FEATURED_ID}`}>
+                        <button className="ops-button">View Auction</button>
+                    </Link>
                 </div>
                 </Grid>
             </Grid>
