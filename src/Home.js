@@ -49,7 +49,6 @@ function Home(props) {
                 <h1 className="heading" id='liveAuctions'>Live auctions</h1>
                 <div style={{textAlign: "left"}}>
                     {loadedAuctions.map(auction => {
-                        console.log(auction)
                         return (
                             <DisplayMiniAuction
                                 key={auction.id}
