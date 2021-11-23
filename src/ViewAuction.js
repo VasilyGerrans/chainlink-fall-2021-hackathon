@@ -14,7 +14,7 @@ function ViewAuction(props) {
     const [ loadedNft, setLoadedNft ] = useState({});
     const [ badUrl, setBadUrl ] = useState(false);
     const [ highestBid, setHighestBid ] = useState(0);
-    const [ highestBider, setHighestBidder ] = useState("");
+    const [ highestBidder, setHighestBidder ] = useState("");
     const [ myCurrentBid, setMyCurrentBid ] = useState(0);
     const [ current, setCurrent ] = useState(5000);
     const [ bidding, setBidding ] = useState(10000);
@@ -44,14 +44,14 @@ function ViewAuction(props) {
                 // auction has ended
                 setAuctionStage(2);
             }
-            setCurrent(currentBlock);
-            setBidding(closingBlock)
-            setClosing(finalBlock);
-            setBlocks({
-                created: auction.attributes.block_number,
-                closing: Number(auction.attributes.closingBlock),
-                final: Number(auction.attributes.finalBlock)
-            });
+            // setCurrent(currentBlock);
+            // setBidding(closingBlock)
+            // setClosing(finalBlock);
+            // setBlocks({
+                // created: auction.attributes.block_number,
+                // closing: Number(auction.attributes.closingBlock),
+                // final: Number(auction.attributes.finalBlock)
+            // });
             const options = {
                 contractAddress: CONTRACT_ADDR,
                 functionName: "getAuction",
@@ -85,7 +85,7 @@ function ViewAuction(props) {
     const updateHighest = async() => {
         console.log("updated Highest");
         if(aid !== 0 && props.wallet !== undefined) {
-            if (highestBid === 0) {
+            if (highestBid === 0 && highestBidder === "") {
                 (async() => {
                     const options = {
                         contractAddress: CONTRACT_ADDR,
@@ -97,7 +97,9 @@ function ViewAuction(props) {
                     };
                     const result = await props.Moralis.executeFunction(options);
                     console.log("currentHighestBid: ", result);
-                    setHighestBid(props.Moralis.Units.ETH(result["1"]));
+                    if (result["0"] !== "0x0000000000000000000000000000000000000000"){
+                        setHighestBid(props.Moralis.Units.ETH(result["1"]));
+                    }
                     setHighestBidder(result["0"]);
                 })();
             }
@@ -130,6 +132,7 @@ function ViewAuction(props) {
             },
             msgValue: props.Moralis.Units.ETH(myBid),
         };
+        console.log(options);
         const receipt = await props.Moralis.executeFunction(options);
     }
 
@@ -195,8 +198,8 @@ function ViewAuction(props) {
                                         </button>
                                     </div>
                                     <div className="content">
-                                        <p>Your curent bid is: {myCurrentBid} ETH</p>
-                                        <p>The highest bid is {highestBid} ETH </p>
+                                        <p>Your curent bid is: {props.Moralis.Units.ETH(myCurrentBid)} ETH</p>
+                                        <p>The highest bid is {props.Moralis.Units.ETH(highestBid)} ETH </p>
                                         <input className="bid-input"
                                             placeholder="0.1"
                                             value={myBid}
