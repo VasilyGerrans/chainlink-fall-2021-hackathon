@@ -15,6 +15,7 @@ function ViewAuction(props) {
     const [ badUrl, setBadUrl ] = useState(false);
     const [ highestBid, setHighestBid ] = useState(0);
     const [ highestBidder, setHighestBidder ] = useState("");
+    const [ minimumBid, setMinimumBid ] = useState(0);
     const [ myCurrentBid, setMyCurrentBid ] = useState(0);
     const [ blocks, setBlocks ] = useState({});
     const [ myBid, setMyBid ] = useState(0);
@@ -25,10 +26,8 @@ function ViewAuction(props) {
     const CONTRACT_ADDR = "0xaDbe2339225C83DAfE0621c26f413da6dA879EC1";
 
     const findAuction = async () => {
-        console.log("CALLED");
         const query = new props.Moralis.Query("AuctionCreated");
         const result = await query.get(id).then(async (auction) => {
-            console.log("CALLED 2", auction);
             setAuctionId(auction.get("auctionId"));
             const currentBlock = await props.web3.eth.getBlockNumber();
             const closingBlock = Number(auction.attributes.closingBlock);
@@ -58,13 +57,24 @@ function ViewAuction(props) {
                 }
             };
             const receipt = await props.Moralis.executeFunction(options);
+            console.log(receipt);
             let meta = await props.retrieveNFT(receipt["0"], receipt["1"], "kovan");
-            console.log(meta);
             setLoadedNft(meta);
+
+            const options2 = {
+                contractAddress: CONTRACT_ADDR,
+                functionName: "currentCumulativeBid",
+                abi: candleABI,
+                params: {
+                    auctionId: auction.get("auctionId"),
+                    bidder: "0x0000000000000000000000000000000000000000",
+                },
+            };
+            const result2 = await props.Moralis.executeFunction(options2);
+            setMinimumBid(result2)
         }, (error) => {
             setBadUrl(true);
         });
-
     }
 
     const withdraw = async() => {
@@ -93,7 +103,6 @@ function ViewAuction(props) {
                         },
                     };
                     const result = await props.Moralis.executeFunction(options);
-                    console.log("currentHighestBid: ", result);
                     if (result["0"] !== "0x0000000000000000000000000000000000000000"){
                         setHighestBid(result["1"]);
                     }
@@ -112,7 +121,6 @@ function ViewAuction(props) {
                         },
                     };
                     const result = await props.Moralis.executeFunction(options);
-                    console.log("myHighestBid: ", result);
                     setMyCurrentBid(result);
                 })();
             }
@@ -196,7 +204,7 @@ function ViewAuction(props) {
                                     </div>
                                     <div className="content">
                                         <p>Your curent bid is: {props.Moralis.Units.FromWei(myCurrentBid)} ETH</p>
-                                        <p>The highest bid is {props.Moralis.Units.FromWei(highestBid)} ETH {
+                                        <p>The highest bid above minimum is {props.Moralis.Units.FromWei(highestBid)} ETH {
                                         highestBidder==="0x0000000000000000000000000000000000000000"
                                         ? "": "("+highestBidder+")"} </p>
                                         <input className="bid-input"
@@ -230,7 +238,8 @@ function ViewAuction(props) {
                                 <div>
                                     Current block: {blocks.current}<br/>
                                     Remaining blocks: {blocks.final - blocks.current}<br/>
-                                    Approx time remaining: {humanizeDuration((blocks.final - blocks.current)*13000)}
+                                    Approx time remaining: {humanizeDuration((blocks.final - blocks.current)*13000)}<br/>
+                                    Min bid to win: {props.Moralis.Units.FromWei(minimumBid)} ETH<br/>
                                 </div>                        
                             </div>
                             <div>
@@ -238,7 +247,7 @@ function ViewAuction(props) {
                                 <ol>
                                     {topBidders.map((e, i) => {
                                         return (
-                                            <li>
+                                            <li key={i}>
                                                 {e}: {props.Moralis.Units.FromWei(topAmounts[i])} ETH
                                             </li>
                                         )
