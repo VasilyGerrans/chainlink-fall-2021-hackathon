@@ -78,12 +78,51 @@ function AuctionChart(props) {
         setSeries(seriesArr);
     }
 
-
     return (        
         <div>
             <Chart
                 type="line"
                 options={{   
+                    annotations:{
+                        position: "back",
+                        xaxis: [
+                            {
+                                label: {
+                                    text:""
+                                },
+                                x: props.blocks.current,
+                                strokeDashArray: 4
+                            },
+
+                            {
+                                label: {
+                                    text:"Auction Start"
+                                },
+                                x: props.blocks.created,
+                            },
+                            {
+                                label: {
+                                    text:"Closing window"
+                                },
+                                x: props.blocks.closing,
+                                x2: props.blocks.final,
+                                fillColor: "#f0aa9c"
+                            },
+                            {
+                                label: {
+                                    text:"Auction End"
+                                },
+                                x: props.blocks.final,
+                            }
+                        ]
+                    },
+                    yaxis: {
+                        labels:{
+                            formatter: function(val, index) {
+                                return props.Moralis.Units.FromWei(val) + " ETH";
+                            }
+                        }
+                    },
                     noData: {
                         text: "no bids yet",
                         align: 'center',
@@ -99,13 +138,8 @@ function AuctionChart(props) {
                     },
                     xaxis: {
                         type: 'numeric',
-                    },
-                    yaxis: {
-                        labels:{
-                            formatter: function(val, index) {
-                                return props.Moralis.Units.FromWei(val) + " ETH";
-                            }
-                        }
+                        min: props.blocks.created,
+                        max: props.blocks.final
                     },
                     stroke: {
                         curve: "stepline"
@@ -114,6 +148,14 @@ function AuctionChart(props) {
                         text: "bids",
                         align: "left"
                     },  
+                    grid: {
+                        padding: {
+                            top: 0,
+                            right: 0,
+                            bottom: 0,
+                            left: 25 
+                        }, 
+                    }
                 }}                
                 series={series}
             />
