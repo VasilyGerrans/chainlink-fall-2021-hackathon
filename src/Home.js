@@ -15,6 +15,7 @@ const DisplayMiniAuction = props => (
 
 function Home(props) {
     const [ loadedAuctions, setLoadedAuctions ] = useState([]);
+    const [ currentBlock, setCurrentBlock ] = useState(0);
 
     const getDisplayAuctions = async () => {
         let data = await props.Moralis.Cloud.run("getLiveAuctions")
@@ -23,12 +24,14 @@ function Home(props) {
     }
 
     useEffect(() => {
-        if (props.isInitialized === true && loadedAuctions.length === 0) {
+        if (props.isInitialized === true && loadedAuctions.length === 0 && props.web3 !== undefined) {
             (async () => {
                 await getDisplayAuctions();
+                const currentBlock = await props.web3.eth.getBlockNumber();
+                setCurrentBlock(currentBlock);
             })();
         }
-    }, [props.isInitialized]);
+    }, [props.isInitialized, props.web3]);
 
     return (
         <div>
@@ -53,9 +56,11 @@ function Home(props) {
                             <DisplayMiniAuction
                                 key={auction.id}
                                 id={auction.id}
+                                Moralis={props.Moralis}
                                 image={fixNFTURL(auction.meta.image)}
-                                closingPercentage={10}
-                                progressPercentage={Math.floor(Math.random() * 100)}
+                                highestBid={auction.highestBid["1"]}
+                                closingPercentage={100*(auction.finalBlock - auction.closingBlock)/(auction.finalBlock - auction.createdBlock)}
+                                progressPercentage={100*(currentBlock - auction.createdBlock)/(auction.finalBlock - auction.createdBlock)}
                             />
                         )
                     })}                    
