@@ -124,9 +124,12 @@ function App() {
         <div>
           Kovan Testnet
         </div>
-        <div>
+        <div>          
+          <a target="_blank" href="https://github.com/NFTMeltdown/">
+            <img src="mark.png"></img>
+          </a>
         </div>
-        <div>
+        <div style={{textAlign: "right"}}>
           {ellipsisAddress(wallet)}
         </div>
       </div>
@@ -136,6 +139,7 @@ function App() {
           Kovan Testnet
         </div>
         <div>          
+          <img src="mark.png"></img>
         </div>
         <div>
           <Button onClick={requestConnect}>
@@ -166,6 +170,7 @@ function App() {
             Moralis={Moralis}
             isInitialized={isInitialized}
             featuredNft={featuredNft}
+            web3={web3}
           />          
         </Route>
         <Route path="/create">
