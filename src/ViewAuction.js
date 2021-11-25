@@ -247,7 +247,7 @@ function ViewAuction(props) {
                                 <div>
                                     Current block: {blocks.current}<br/>
                                     Remaining blocks: {(blocks.final - blocks.current)>0?(blocks.final - blocks.current) : 0}<br/>
-                                    Approx time remaining: {(blocks.final - blocks.current)>0?(blocks.final - blocks.current) : 0}<br/>
+                                    Approx time remaining: {(blocks.final - blocks.current)>0?(humanizeDuration((blocks.final - blocks.current)*4000)) : 0}<br/>
                                     Min bid to win: {props.Moralis.Units.FromWei(minimumBid)} ETH<br/>
                                 </div>                        
                             </div>
