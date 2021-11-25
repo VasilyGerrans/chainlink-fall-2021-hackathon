@@ -11,6 +11,7 @@ import Home from './Home';
 import "nes.css/css/nes.min.css";
 import 'reactjs-popup/dist/index.css';
 import './App.css';
+import mark from './font/mark.png';
 import ViewAuction from './ViewAuction';
 
 function App() {
@@ -126,7 +127,7 @@ function App() {
         </div>
         <div>          
           <a target="_blank" href="https://github.com/NFTMeltdown/">
-            <img src="mark.png"></img>
+            <img src={mark}></img>
           </a>
         </div>
         <div style={{textAlign: "right"}}>
