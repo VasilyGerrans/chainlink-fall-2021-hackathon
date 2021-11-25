@@ -15,6 +15,7 @@ function ViewAuction(props) {
     const [ badUrl, setBadUrl ] = useState(false);
     const [ highestBid, setHighestBid ] = useState(0);
     const [ highestBidder, setHighestBidder ] = useState("");
+    const [ auctionWinner, setWinner ] = useState("");
     const [ minimumBid, setMinimumBid ] = useState(0);
     const [ myCurrentBid, setMyCurrentBid ] = useState(0);
     const [ blocks, setBlocks ] = useState({});
@@ -23,7 +24,7 @@ function ViewAuction(props) {
     const [ auctionStage, setAuctionStage ] = useState();
     const [ topBidders, setTopBidders ] = useState([]);
     const [ topAmounts, setTopAmounts ] = useState([]);
-    const CONTRACT_ADDR = "0xaDbe2339225C83DAfE0621c26f413da6dA879EC1";
+    const CONTRACT_ADDR = "0xCD4187E1CEA925Fbe741c702942E8f802523DCA2";
 
     const findAuction = async () => {
         const query = new props.Moralis.Query("AuctionCreated");
@@ -46,7 +47,8 @@ function ViewAuction(props) {
                 const query2 = new props.Moralis.Query("AuctionFinalised");
                 query2.equalTo("auctionId", auction.get("auctionId"));
                 const result2 = await query2.first();
-                finalisedAt = result2.get("block_number");
+                finalisedAt = result2.get("blockFinlised");
+                setWinner(query2.get("winner"));
             }
             setBlocks({
                 current: currentBlock,
@@ -244,8 +246,8 @@ function ViewAuction(props) {
                                 {auctionStage===2 && <b style={{color: "green"}}>Auction Finished</b>}
                                 <div>
                                     Current block: {blocks.current}<br/>
-                                    Remaining blocks: {blocks.final - blocks.current}<br/>
-                                    Approx time remaining: {humanizeDuration((blocks.final - blocks.current)*13000)}<br/>
+                                    Remaining blocks: {(blocks.final - blocks.current)>0?(blocks.final - blocks.current) : 0}<br/>
+                                    Approx time remaining: {(blocks.final - blocks.current)>0?(blocks.final - blocks.current) : 0}<br/>
                                     Min bid to win: {props.Moralis.Units.FromWei(minimumBid)} ETH<br/>
                                 </div>                        
                             </div>
@@ -255,7 +257,7 @@ function ViewAuction(props) {
                                     {topBidders.map((e, i) => {
                                         return (
                                             <li key={i}>
-                                                {e}: {props.Moralis.Units.FromWei(topAmounts[i])} ETH
+                                                {e} {props.Moralis.Units.FromWei(topAmounts[i])} ETH
                                             </li>
                                         )
                                     })}

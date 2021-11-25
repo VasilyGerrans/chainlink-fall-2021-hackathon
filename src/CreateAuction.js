@@ -28,7 +28,7 @@ function CreateAuction(props) {
     const [ hasApproved, setHasApproved ] = useState(false);
     const [ nftContract, setnftContract ] = useState();
 
-    const CONTRACT_ADDR = "0xaDbe2339225C83DAfE0621c26f413da6dA879EC1";
+    const CONTRACT_ADDR = "0xCD4187E1CEA925Fbe741c702942E8f802523DCA2";
 
     const loadNftAndContract = (nft) => {
         if (nft !== null && nft !== undefined){

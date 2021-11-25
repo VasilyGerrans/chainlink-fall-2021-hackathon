@@ -50,7 +50,7 @@ function App() {
     return null;
   }
   const getFeaturedAuction = async() => {
-      let meta = await retrieveNFT("0xa1b028b06b1663c2e3ca6ccf0d2374d1d2edfc97", 33, "kovan");
+      let meta = await retrieveNFT("0xa1b028b06b1663c2e3ca6ccf0d2374d1d2edfc97", 36, "kovan");
       console.log(meta);
       // Show it as an image
       meta.animation_url = null;
