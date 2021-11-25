@@ -74,7 +74,7 @@ function CreateAuction(props) {
     
     const blocksFromTime = () => {
         let timeMultiplier = (biddingTime === timeOptions[0] ? 1 : biddingTime === timeOptions[1] ? 24 : 24 * 7);
-        return Math.ceil(Number(auctionTime) * 60 * 60 * timeMultiplier / 13);
+        return Math.ceil(Number(auctionTime) * 60 * 60 * timeMultiplier / 4);
     }    
 
     const sendNFTApprove = async () => {

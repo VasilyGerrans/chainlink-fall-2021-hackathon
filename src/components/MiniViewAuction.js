@@ -42,7 +42,7 @@ function MiniViewAuction(props) {
                                         <AuctionBar 
                                             closingPercentage={props.closingPercentage}
                                             progressPercentage={props.progressPercentage}
-                                        />:"Finished"
+                                        />:<b>Finished</b>
                                 }
                             </CardContent>
                         </Link>

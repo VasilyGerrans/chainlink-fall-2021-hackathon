@@ -17,6 +17,12 @@ function AuctionChart(props) {
         ){
             (async () => {
                 await getBidSeriesCaleb();
+                const query = new props.Moralis.Query("BidIncreased");
+                query.equalTo("auctionId", props.auctionId)
+                const subscription = await query.subscribe();
+                subscription.on("create", () =>{
+                    getBidSeriesCaleb();
+                })
             })();
         }
     }, [props.Moralis, props.auctionId, props.isInitialized, props.web3, props.blocks]);
