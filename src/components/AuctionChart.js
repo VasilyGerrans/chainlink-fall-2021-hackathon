@@ -114,6 +114,13 @@ function AuctionChart(props) {
                                     text:"Auction End"
                                 },
                                 x: props.blocks.final,
+                            },
+                            {
+                                label: {
+                                    text: "Winner"
+                                },
+                                borderColor: '#775DD0',
+                                x: props.blocks.winner,
                             }
                         ]
                     },
