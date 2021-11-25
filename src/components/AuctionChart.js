@@ -26,6 +26,7 @@ function AuctionChart(props) {
     const getBidSeriesCaleb = async() => {
         const query = new props.Moralis.Query("BidIncreased");
         query.ascending("block_number");
+        query.equalTo("auctionId", props.auctionId)
         const result = await query.find();
 
         // fetch unique bidders
