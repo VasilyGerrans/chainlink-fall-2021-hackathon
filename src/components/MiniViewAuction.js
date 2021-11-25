@@ -37,10 +37,13 @@ function MiniViewAuction(props) {
                                 <p style={{margin: "5px auto"}}>
                                     {props.Moralis.Units.FromWei(props.highestBid)} ETH
                                 </p>
-                                <AuctionBar 
-                                    closingPercentage={props.closingPercentage}
-                                    progressPercentage={props.progressPercentage}
-                                />
+                                {
+                                    props.progressPercentage > 0 ? 
+                                        <AuctionBar 
+                                            closingPercentage={props.closingPercentage}
+                                            progressPercentage={props.progressPercentage}
+                                        />:"Finished"
+                                }
                             </CardContent>
                         </Link>
                     </CardActionArea>

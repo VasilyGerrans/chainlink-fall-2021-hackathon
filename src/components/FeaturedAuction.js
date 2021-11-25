@@ -9,8 +9,8 @@ import { Grid } from '@mui/material';
 // A featured auction is a big NFT alongside an auction chart
 function FeaturedAuction(props) {
     const [ loading, setLoading ] = useState(true);
-    const FEATUERED_AUCTION_ID = 31;
-    const FEATURED_ID = "3oCAjhyyziGwgFzpr6olZ2FK";
+    const FEATUERED_AUCTION_ID = 0;
+    const FEATURED_ID = "9hsLO9uomPHVlDBkFbLg7aZQ";
 
     const fixUrl = url => {
         if (url === "" || url ==="#" || url === undefined || url === null) {
