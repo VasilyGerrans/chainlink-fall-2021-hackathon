@@ -44,8 +44,8 @@ function ViewAuction(props) {
                 setAuctionStage(2);
                 // find when it finalised at
                 const query2 = new props.Moralis.Query("AuctionFinalised");
-                query2.equalTo("auctionId", query.get("auctionId"));
-                const result2 = await query.first();
+                query2.equalTo("auctionId", auction.get("auctionId"));
+                const result2 = await query2.first();
                 finalisedAt = result2.get("block_number");
             }
             setBlocks({
