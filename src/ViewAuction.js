@@ -32,6 +32,7 @@ function ViewAuction(props) {
             const currentBlock = await props.web3.eth.getBlockNumber();
             const closingBlock = Number(auction.attributes.closingBlock);
             const finalBlock = Number(auction.attributes.finalBlock);
+            let finalisedAt = 0;
             if (currentBlock < closingBlock) {
                 // we are in regular bidding phase
                 setAuctionStage(0);
@@ -41,12 +42,18 @@ function ViewAuction(props) {
             } else {
                 // auction has ended
                 setAuctionStage(2);
+                // find when it finalised at
+                const query2 = new props.Moralis.Query("AuctionFinalised");
+                query2.equalTo("auctionId", query.get("auctionId"));
+                const result2 = await query.first();
+                finalisedAt = result2.get("block_number");
             }
             setBlocks({
                 current: currentBlock,
                 created: Number(auction.attributes.block_number),
                 closing: Number(auction.attributes.closingBlock),
-                final: Number(auction.attributes.finalBlock)
+                final: Number(auction.attributes.finalBlock),
+                winner:  finalisedAt
             });
             const options = {
                 contractAddress: CONTRACT_ADDR,
