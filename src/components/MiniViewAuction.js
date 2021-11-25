@@ -23,7 +23,7 @@ function MiniViewAuction(props) {
                     </CardContent>
                 </Card>
                 :
-                <Card sx={{ maxWidth: 200 }}>
+                <Card sx={{ maxWidth: 200, minHeight: 300 }}>
                     <CardActionArea>
                         <Link to={`/auction/${props.id}`}>
                             <CardMedia
