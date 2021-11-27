@@ -10,7 +10,7 @@ import { Grid } from '@mui/material';
 function FeaturedAuction(props) {
     const [ loading, setLoading ] = useState(true);
     const FEATUERED_AUCTION_ID = 0;
-    const FEATURED_ID = "9hsLO9uomPHVlDBkFbLg7aZQ";
+    const FEATURED_ID = "1Bflzjr87CBSYl7jS47LDrSq";
 
     const fixUrl = url => {
         if (url === "" || url ==="#" || url === undefined || url === null) {
